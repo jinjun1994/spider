@@ -1,0 +1,23 @@
+{
+  "extends": ["eslint-config-egg", "plugin:import/errors"],
+  "rules": {
+    "linebreak-style": "off",
+    "arrow-parens": "off",
+    "no-unused-vars": "off",
+    "no-useless-constructor":"off",
+    "valid-jsdoc": "off",
+    "eol-last": "off",
+    "strict": "off",
+    "no-else-return":"off",
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "only-multiline",
+        "objects": "only-multiline"
+      }
+    ]
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}
