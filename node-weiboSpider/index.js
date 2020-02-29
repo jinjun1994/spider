@@ -18,7 +18,7 @@ function main(){
     mode: 'text',
     // message 模式
    //  args:['-i','2492465520','-i',"2201566133",'-c',cookie]
-    args:['-s','2020-02-27','-c',cookie]
+    args:['-s','2018-02-2','-c',cookie,'-m','mongodb://jinjun:jj044019@149.248.5.21/admin']
    });
  
  spider.on('message', function (message) {

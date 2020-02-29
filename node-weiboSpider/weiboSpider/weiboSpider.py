@@ -38,6 +38,7 @@ class Weibo(object):
         self.video_download = config[
             'video_download']  # 取值范围为0、1,程序默认为0,代表不下载微博视频,1代表下载
         self.cookie = {'Cookie': config['cookie']}
+        self.mongodb_url = config.get('mongodb_url')  # mongodb数据库连接配置，可以不填
         self.mysql_config = config.get('mysql_config')  # MySQL数据库连接配置，可以不填
         user_id_list = config['user_id_list']
         if not isinstance(user_id_list, list):
@@ -833,7 +834,10 @@ class Weibo(object):
             sys.exit(u'系统中可能没有安装pymongo库，请先运行 pip install pymongo ，再运行程序')
         try:
             from pymongo import MongoClient
-            client = MongoClient()
+            if self.mongodb_url:
+                client = MongoClient(self.mongodb_url)
+            else :
+                client = MongoClient()
             db = client['weibo']
             collection = db[collection]
             if len(self.write_mode) > 1:
@@ -1096,6 +1100,7 @@ def main():
     id = []
     cookie = ""
     since = ""
+    mongodb=""
 
     try:
         """
@@ -1108,17 +1113,17 @@ def main():
             返回值options是以元组为元素的列表，每个元组的形式为：(选项串, 附加参数)，如：('-i', '192.168.0.1')
             返回值args是个列表，其中的元素是那些不含'-'或'--'的参数。
         """
-        opts, args = getopt.getopt(sys.argv[1:], "hi:c:s:", ["help", "id=", "cookie=","since="])
+        opts, args = getopt.getopt(sys.argv[1:], "hi:c:s:m:", ["help", "id=", "cookie=","since=","mongodb="])
     except getopt.GetoptError:
-        print('Error: spider.py -i <id> -c <cookie> -s <since>')
-        print('   or: spider.py --id=<id> --cookie=<cookie> --since=<since>')
+        print('Error: spider.py -i <id> -c <cookie> -s <since> -m <mongodb>')
+        print('   or: spider.py --id=<id> --cookie=<cookie> --mongodb=<mongodb>')
         sys.exit(2)
 
     # 处理 返回值options是以元组为元素的列表。
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print('spider.py -i <id> -c <cookie> -s <since>')
-            print('or: spider.py --id=<id> --cookie=<cookie> --since=<since>')
+            print('spider.py -i <id> -c <cookie> -s <since> -m <mongodb>')
+            print('or: spider.py --id=<id> --cookie=<cookie> --since=<since> --mongodb=<mongodb>')
             sys.exit()
         elif opt in ("-i", "--id"):
              id.append(arg)
@@ -1126,10 +1131,13 @@ def main():
             cookie = arg
         elif opt in ("-s", "--since"):
             since = arg
+        elif opt in ("-m", "--mongodb"):
+            mongodb = arg
     print('opts: ', opts)
     print('id: ', id)
     print('cookie: ', cookie)
     print('since: ', since)
+    print('mongodb: ', mongodb)
     # sys.exit(2)
     try:
         config_path = os.path.split(
@@ -1143,10 +1151,11 @@ def main():
 	"user_id_list": 'user_id_list.txt',
     "filter": 1,
     "since_date": since,
-    "write_mode": ["csv", "txt"],
+    "write_mode": ["csv", "txt",'mongo'],
     "pic_download": 1,
     "video_download": 1,
     "cookie": "_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803",
+    "mongodb_url":mongodb,
     "mysql_config": {
         "host": "localhost",
         "port": 3306,
