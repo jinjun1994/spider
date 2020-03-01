@@ -18,7 +18,11 @@ function main(){
     mode: 'text',
     // message 模式
    //  args:['-i','2492465520','-i',"2201566133",'-c',cookie]
-    args:['-s','2018-02-2','-c',cookie,'-m','mongodb://jinjun:jj044019@149.248.5.21/admin']
+    args:[
+      '-s','2010-01-01',
+      '-c',cookie,
+    // '-m','mongodb://jinjun:jj044019@149.248.5.21/admin'
+  ]
    });
  
  spider.on('message', function (message) {
@@ -45,7 +49,7 @@ function main(){
    // Fires when the process terminates with a non-zero exit code.
    console.log(error,'error');
  });
- setTimeout(main, time);
+//  setTimeout(main, time);
 }
 
 main()
