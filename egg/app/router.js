@@ -8,4 +8,5 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.get('/time', controller.home.time);
   router.get('/user', controller.user.index);
+  router.get('/weibo', controller.weibo.index);
 };
