@@ -10,13 +10,20 @@ class WeiboService extends Service {
   // 1. mongoose
 
   /**
-   * 查询符合条件的用户
+   * 查询符合条件的微博
    * @param {Object} options 条件
    * @param {Object} query 参数
-   * @return {Array} 用户
+   * @return {Array} 微博
    */
   async list(options, query) {
-    return await this.app.model.Weibo.find({}).limit(100);
+    const { skip, limit, sort } = query;
+    const params = { sort: sort ? sort : { time: -1 } };
+
+    if (skip !== undefined && limit !== undefined) {
+      params.skip = skip;
+      params.limit = limit;
+    }
+    return await this.app.model.Weibo.find(options, null, params);
   }
 
   async listWithCooperations(options, query) {
@@ -52,7 +59,7 @@ class WeiboService extends Service {
    * @return {Number} 总数
    */
   async count(options) {
-    return await this.app.model.User.countDocuments(options);
+    return await this.app.model.Weibo.countDocuments(options);
   }
 
   async findByUsername(username) {

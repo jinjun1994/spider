@@ -4,13 +4,13 @@ module.exports = app => {
 
   const UserSchema = new Schema({
 
-    id: { type: String },
-    user_id: { type: String },
-    content: { type: String },
-    original_pictures: { type: String },
-    retweet_pictures: { type: String },
-    original: { type: Boolean },
-    video_url: { type: String },
+    id: { type: String }, // 微博id
+    user_id: { type: String }, // 作者id
+    content: { type: String }, // 内容
+    original_pictures: { type: String }, // 原创图片url
+    retweet_pictures: { type: String }, // 转发图片url
+    original: { type: Boolean }, // 是否原创微博
+    video_url: { type: String }, // 微博视频url
     publish_place: { type: String },
     publish_time: { type: Date },
     publish_tool: { type: String },
