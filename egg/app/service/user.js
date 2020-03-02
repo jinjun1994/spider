@@ -16,10 +16,14 @@ class UserService extends Service {
    * @return {Array} 用户
    */
   async list(options, query) {
-    console.log('find');
-    console.log(this.app.model.User);
-    console.log(this.app.model);
-    return await this.app.model.User.find({});
+    const { skip, limit, sort } = query;
+    const params = { sort: sort ? sort : { time: -1 } };
+
+    if (skip !== undefined && limit !== undefined) {
+      params.skip = skip;
+      params.limit = limit;
+    }
+    return await this.app.model.User.find(options, null, params);
   }
 
   async listWithCooperations(options, query) {

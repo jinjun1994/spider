@@ -14,13 +14,21 @@ class UsersController extends Controller {
 
   async index(ctx) {
     try {
+      const { nickname } = ctx.query;
+      let options;
+      if (nickname) {
+        options = {
+          nickname: new RegExp(nickname, 'i')
+        };
+      } else {
+        options = {
+        };
+      }
 
-      ctx.body = await ctx.service.user.list({});
+      ctx.body = await ctx.service.crud.index(ctx.service.user, options);
     } catch (err) {
       ctx.logger.warn(err);
-      ctx.body = {
-        eror: err.message
-      };
+      throw err;
     }
   }
 
