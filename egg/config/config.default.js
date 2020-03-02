@@ -23,6 +23,15 @@ module.exports = appInfo => {
         useUnifiedTopology: true,
       },
       // mongoose global plugins, expected a function or an array of function and options
+    },
+    onerror: {
+      all(err, ctx) {
+        // 在此处定义针对所有响应类型的错误处理方法
+        // 注意，定义了 config.all 之后，其他错误处理方法不会再生效
+        ctx.body = { message: err.message || err };
+        ctx.status = 500;
+      },
+
     }
   };
 
