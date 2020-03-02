@@ -1,0 +1,49 @@
+{
+  "extends": [
+    "eslint-config-egg",
+    "plugin:vue/recommended"
+  ],
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "rules": {
+    "linebreak-style": [
+      "off",
+      "windows"
+    ],
+    "arrow-parens": "off",
+    "valid-jsdoc": "off",
+    "eol-last": "off",
+    "array-bracket-spacing": "off",
+    "no-unused-vars": "off",
+    "no-else-return": "off",
+    "no-alert": "off",
+    "strict": "off",
+    "no-irregular-whitespace": [
+      "error",
+      {
+        "skipComments": true
+      }
+    ],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "only-multiline",
+        "objects": "only-multiline"
+      }
+    ],
+    "vue/html-self-closing": "off"
+    },
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "jquery": true,
+    "es6": true
+  },
+  "plugins": [
+    "vue"
+  ]
+}
