@@ -34,7 +34,7 @@
           tag="ul"
           name="item"
         >
-          <div
+          <!-- <div
             v-for="item in peoples"
             :key="item.id"
           >
@@ -42,14 +42,13 @@
             {{ item.weibo_num }}
             {{ item.following }}
             {{ item.followers }}
-            <!-- {{ item }} -->
-          </div>
-          <!-- <item
+          </div> -->
+          <item
             v-for="item in displayedItems"
-            :key="item.id"
+            :key="item._id"
             :item="item"
           >
-          </item> -->
+          </item>
         </transition-group>
       </div>
     </transition>
@@ -58,13 +57,13 @@
 
 <script>
 import { fetchPeople } from '../api';
-// import Item from '../components/Item.vue'
+import Item from '../components/Item.vue';
 
 export default {
   name: 'ItemList',
 
   components: {
-    // Item
+    Item
   },
 
   // props: {
@@ -75,7 +74,7 @@ export default {
     return {
       transition: 'slide-right',
       displayedPage: Number(this.$route.params.page) || 1,
-      displayedItems: this.$store.getters.activeItems,
+      displayedItems: [],
       peoples: []
     };
   },
@@ -102,6 +101,7 @@ export default {
   async beforeMount() {
     const peoples = (await fetchPeople()).data;
     this.peoples = peoples;
+    this.displayedItems = peoples;
     console.log(peoples);
     console.log(this.displayedPage);
 

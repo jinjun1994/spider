@@ -8,14 +8,14 @@
         >
           <!-- <img class="logo" src="~public/logo-48.png" alt="logo"> -->
         </router-link>
-        <router-link to="/top">
+        <router-link to="/people">
           博主
         </router-link>
-        <router-link to="/new">
-          New
+        <router-link to="/weibo">
+          微博
         </router-link>
-        <router-link to="/show">
-          Show
+        <router-link to="/post">
+          提交
         </router-link>
         <router-link to="/ask">
           Ask
@@ -29,7 +29,7 @@
           target="_blank"
           rel="noopener"
         >
-          Built with Vue.js
+          集智阁
         </a>
       </nav>
     </header>
