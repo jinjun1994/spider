@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 
-export async function fetchPeople() {
-  const list = await axios.get('/api/user');
+export async function fetchPeople(params) {
+  const list = await axios.get('/api/user', { params });
   return list;
 }
-export async function fetchWeibo() {
-  const list = await axios.get('/api/weibo');
+export async function fetchWeibo(params) {
+  const list = await axios.get('/api/weibo', { params });
   return list;
 }

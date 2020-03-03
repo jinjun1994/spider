@@ -4,7 +4,15 @@ import './registerServiceWorker';
 import router from './router';
 import store from './store';
 import ProgressBar from './components/ProgressBar.vue';
-
+import './plugins/element.js';
+import merge from 'webpack-merge';
+Vue.prototype.merge = merge;
+Vue.config.errorHandler = function(err, vm, info) {
+  // axios 出错信息
+  const message = err.response && err.response.data.error;
+  vm.$message.error(message || err.message || err);
+  if (process.env.NODE_ENV !== 'production') throw err;
+};
 Vue.config.productionTip = false;
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount();

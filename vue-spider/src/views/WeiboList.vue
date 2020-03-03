@@ -1,27 +1,14 @@
 <template>
   <div class="news-view">
     <div class="news-list-nav">
-      <router-link
-        v-if="page > 1"
-        :to="'/' + type + '/' + (page - 1)"
-      >
-        &lt; prev
-      </router-link>
-      <a
-        v-else
-        class="disabled"
-      >&lt; prev</a>
-      <span>{{ page }}/{{ maxPage }}</span>
-      <router-link
-        v-if="hasMore"
-        :to="'/' + type + '/' + (page + 1)"
-      >
-        more &gt;
-      </router-link>
-      <a
-        v-else
-        class="disabled"
-      >more &gt;</a>
+      <div class="block">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="total"
+          @current-change="currentChange"
+        >
+        </el-pagination>
+      </div>
     </div>
 
     <transition :name="transition">
@@ -75,13 +62,14 @@ export default {
       transition: 'slide-right',
       displayedPage: Number(this.$route.params.page) || 1,
       displayedItems: [],
-      weibos: []
+      weibos: [],
+      size: 10
     };
   },
 
   computed: {
     page() {
-      return Number(this.$route.params.page) || 1;
+      return Number(this.$route.query.page) || 1;
     },
     maxPage() {
       return 12;
@@ -93,17 +81,13 @@ export default {
   },
 
   watch: {
-    page(to, from) {
-      this.loadItems(to, from);
+    async page(to, from) {
+      await this.fetchWeibo();
     }
   },
 
   async beforeMount() {
-    const weibos = (await fetchWeibo()).data;
-    this.weibos = weibos;
-    this.displayedItems = weibos;
-    console.log(weibos);
-    console.log(this.displayedPage);
+    await this.fetchWeibo();
 
 
   },
@@ -112,7 +96,28 @@ export default {
   },
 
   methods: {
+    async fetchWeibo() {
+      console.log(this.page);
 
+      const { list, total } = (await fetchWeibo(
+        {
+          total: true,
+          page: this.page,
+          size: this.size
+        }
+      )).data;
+      this.weibos = list;
+      this.total = total;
+      this.displayedItems = list;
+      console.log(list, total);
+      console.log(this.displayedPage);
+    },
+    currentChange(page) {
+      this.$router.push({
+        query: this.merge(this.$route.query, { page })
+      }).catch(err => {});
+
+    }
   }
 };
 </script>

@@ -1,28 +1,16 @@
 <template>
   <div class="news-view">
     <div class="news-list-nav">
-      <router-link
-        v-if="page > 1"
-        :to="'/' + type + '/' + (page - 1)"
-      >
-        &lt; prev
-      </router-link>
-      <a
-        v-else
-        class="disabled"
-      >&lt; prev</a>
-      <span>{{ page }}/{{ maxPage }}</span>
-      <router-link
-        v-if="hasMore"
-        :to="'/' + type + '/' + (page + 1)"
-      >
-        more &gt;
-      </router-link>
-      <a
-        v-else
-        class="disabled"
-      >more &gt;</a>
+      <div class="block">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="total"
+          @current-change="currentChange"
+        >
+        </el-pagination>
+      </div>
     </div>
+
 
     <transition :name="transition">
       <div
@@ -58,7 +46,6 @@
 <script>
 import { fetchPeople } from '../api';
 import Item from '../components/Item.vue';
-
 export default {
   name: 'ItemList',
 
@@ -75,13 +62,14 @@ export default {
       transition: 'slide-right',
       displayedPage: Number(this.$route.params.page) || 1,
       displayedItems: [],
-      peoples: []
+      peoples: [],
+      size: 10
     };
   },
 
   computed: {
     page() {
-      return Number(this.$route.params.page) || 1;
+      return Number(this.$route.query.page) || 1;
     },
     maxPage() {
       return 12;
@@ -94,16 +82,12 @@ export default {
 
   watch: {
     page(to, from) {
-      this.loadItems(to, from);
+      this.fetchPeople();
     }
   },
 
   async beforeMount() {
-    const peoples = (await fetchPeople()).data;
-    this.peoples = peoples;
-    this.displayedItems = peoples;
-    console.log(peoples);
-    console.log(this.displayedPage);
+    await this.fetchPeople();
 
 
   },
@@ -112,7 +96,28 @@ export default {
   },
 
   methods: {
+    async fetchPeople() {
+      console.log(this.page);
 
+      const { list, total } = (await fetchPeople(
+        {
+          total: true,
+          page: this.page,
+          size: this.size
+        }
+      )).data;
+      this.peoples = list;
+      this.total = total;
+      this.displayedItems = list;
+      console.log(list, total);
+      console.log(this.displayedPage);
+    },
+    currentChange(page) {
+      this.$router.push({
+        query: this.merge(this.$route.query, { page })
+      }).catch(err => {});
+
+    }
   }
 };
 </script>
