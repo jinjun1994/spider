@@ -63,7 +63,8 @@ export default {
       displayedPage: Number(this.$route.params.page) || 1,
       displayedItems: [],
       weibos: [],
-      size: 10
+      size: 10,
+      total: 0
     };
   },
 

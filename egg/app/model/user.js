@@ -11,7 +11,7 @@ module.exports = app => {
     followers: { type: Number },
 
   });
-
+  UserSchema.index({ id: 1 });
   //   return mongoose.model('User', UserSchema, { freezeTableName: true });
   return mongoose.model('User', UserSchema, 'user');
 //   https://stackoverflow.com/questions/7486528/mongoose-force-collection-name

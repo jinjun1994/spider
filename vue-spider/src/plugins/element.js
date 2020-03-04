@@ -21,6 +21,7 @@ import {
   //   CheckboxGroup,
   // Switch,
   Select,
+  Image,
   Option,
   //   OptionGroup,
   Button,
@@ -48,7 +49,7 @@ import {
   //   Upload,
   //   Progress,
   //   Badge,
-  // Card,
+  Card,
   //   Rate,
   //   Steps,
   //   Step,
@@ -72,6 +73,7 @@ import {
 
 Vue.use(Pagination);
 Vue.use(Dialog);
+Vue.use(Image);
 // Vue.use(Autocomplete);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
@@ -117,7 +119,7 @@ Vue.use(Col);
 // Vue.use(Upload);
 // Vue.use(Progress);
 // Vue.use(Badge);
-// Vue.use(Card);
+Vue.use(Card);
 // Vue.use(Rate);
 // Vue.use(Steps);
 // Vue.use(Step);

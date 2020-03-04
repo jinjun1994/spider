@@ -31,6 +31,15 @@ class UsersController extends Controller {
       throw err;
     }
   }
+  async findById(ctx) {
+    try {
+      const { id } = ctx.params;
+      ctx.body = await ctx.service.user.findById(id);
+    } catch (err) {
+      ctx.logger.warn(err);
+      throw err;
+    }
+  }
 
 
 }

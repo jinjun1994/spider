@@ -1,66 +1,83 @@
 <template>
   <li class="news-item">
-    <span class="score">{{ item.weibo_num }}</span>
-    <span class="title">
-      <template v-if="item.content">
+    <el-card class="box-card">
+      <div
+        slot="header"
+        class="clearfix"
+      >
+        <span
+          :to="'/user/'+item.id"
+        >
+          {{ item.content }}
+        </span>
+        <span class="host">
+          <a
+            :href="'https://weibo.com/'+item.user_id+'/'+item.id"
+            target="_blank"
+            rel="noopener"
+          >{{ item.descendants }} 原文</a></span>
+        <span
+          class="score"
+          @click="$router.push({path:`/user/${item.id}`})"
+        > {{ item.weibo_num }}</span>
+      </div>
+      <!-- <template
+        v-for="item in item.original_pictures.split(",")"
+      >
+        <img
+          :key="item"
+          :src="item"
+          class="image"
+        >
+      </template> -->
+
+      <template
+        v-if="item.original_pictures!=='无'"
+      >
+        <img
+          v-for="item in item.original_pictures.split(',')"
+          :key="item"
+          :src="item"
+          class="image"
+          referrerpolicy="no-referrer"
+        >
+        <!-- <el-image
+          v-for="img in item.original_pictures.split(',')"
+          :key="img"
+          :src="img"
+          class="image"
+          referrer-policy="no-referrer"
+          :preview-src-list="item.original_pictures.split(',')"
+        >
+        </el-image> -->
+      </template>
+      <div class="host top">
         <a
-          :href="'https://weibo.com/'+item.user_id+'/'+item.id"
+          :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=repost'"
           target="_blank"
           rel="noopener"
         >
-          {{ item.content }}
-        </a>
-        <span class="host top">
-          <a
-            :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=repost'"
-            target="_blank"
-            rel="noopener"
-          >转发{{ item.retweet_num }} </a>
-          <a
-            :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=comment'"
-            target="_blank"
-            rel="noopener"
-          >   评论：{{ item.comment_num }}</a>
-          <a
-            :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=like'"
-            target="_blank"
-            rel="noopener"
-          >  点赞 {{ item.up_num }} </a>
-
-
-        </span>
-      </template>
-      <template v-else>
-        <router-link :to="'/item/' + item.id">{{ item.title }}</router-link>
-      </template>
-    </span>
-    <br>
-    <span class="meta">
-      <span
-        v-if="item.type !== 'job'"
-        class="by"
-      >
-        <router-link :to="'/user/' + item.by">{{ item.by }}</router-link>
-      </span>
-      <span class="time">
-        <!-- 上次抓取 {{ (Date.now() / 1000) | timeAgo }} ago -->
-        发布时间 {{ new Date(item.publish_time).toLocaleString() }}
-      </span>
-      <span
-        v-if="item.type !== 'job'"
-        class="comments-link"
-      >
-        | <a
-          :href="'https://weibo.com/'+item.user_id+'/'+item.id"
+          转发 {{ item.retweet_num }} </a>
+        <a
+          :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=comment'"
           target="_blank"
           rel="noopener"
-        >{{ item.descendants }} 原文</a>
-      </span>
-    </span>
-    <span
-      v-if="item.type !== 'story'"
-      class="label"
-    >{{ item.type }}</span>
+        >
+          评论 {{ item.comment_num }}</a>
+        <a
+          :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=like'"
+          target="_blank"
+          rel="noopener"
+        >
+          点赞 {{ item.up_num }}
+        </a>
+      </div>
+      <div class="host">
+        {{ item.publish_tool }}
+        {{ new Date(item.publish_time).toLocaleString() }}
+        {{ item.publish_place==='无'?"":item.publish_place }}
+      </div>
+    </el-card>
   </li>
 </template>
 
@@ -83,37 +100,22 @@ import { timeAgo } from '../util/filters';
 
 export default {
   name: 'NewsItem',
-  props: ['item'],
+  props: {
+    item: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+  },
   // http://ssr.vuejs.org/en/caching.html#component-level-caching
 
 };
 </script>
 
-<style lang="stylus">
-.news-item
-  background-color #fff
-  padding 20px 30px 20px 80px
-  border-bottom 1px solid #eee
-  position relative
-  line-height 20px
-  .score
-    color #ff6600
-    font-size 1.1em
-    font-weight 700
-    position absolute
-    top 50%
-    left 0
-    width 80px
-    text-align center
-    margin-top -10px
-  .top
-    display:block
-    margin-top 5px
-  .meta, .host
-    font-size .85em
-    color #828282
-    a
-      color #828282
-      &:hover
-        color #ff6600
+<style lang="stylus" scoped >
+  .image {
+    display: inline-block;
+    max-width:33%
+  }
 </style>

@@ -17,7 +17,7 @@ class UserService extends Service {
    */
   async list(options, query) {
     const { skip, limit, sort } = query;
-    const params = { sort: sort ? sort : { time: -1 } };
+    const params = { sort: sort ? sort : { publish_time: -1 } };
 
     if (skip !== undefined && limit !== undefined) {
       params.skip = skip;
@@ -67,7 +67,7 @@ class UserService extends Service {
   }
 
   async findById(id) {
-    return await this.app.model.User.findById(id);
+    return await this.app.model.User.findOne({ id });
   }
   async create(user) {
     return await this.service.crud.create(this.app.model.User, user);

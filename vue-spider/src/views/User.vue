@@ -1,6 +1,11 @@
 <template>
   <div class="news-view">
     <div class="news-list-nav">
+      <Item
+        class="user"
+        :item="user"
+      >
+      </Item>
       <div class="block">
         <el-pagination
           layout="prev, pager, next"
@@ -10,7 +15,6 @@
         </el-pagination>
       </div>
     </div>
-
 
     <transition :name="transition">
       <div
@@ -31,12 +35,12 @@
             {{ item.following }}
             {{ item.followers }}
           </div> -->
-          <item
+          <WeiboItem
             v-for="item in displayedItems"
             :key="item._id"
             :item="item"
           >
-          </item>
+          </WeiboItem>
         </transition-group>
       </div>
     </transition>
@@ -44,12 +48,15 @@
 </template>
 
 <script>
-import { fetchPeople } from '../api';
-import Item from '../components/Item.vue';
+import { fetchWeibo, findUserById } from '../api';
+import WeiboItem from '../components/WeiboItem';
+import Item from '../components/Item';
+
 export default {
   name: 'ItemList',
 
   components: {
+    WeiboItem,
     Item
   },
 
@@ -62,9 +69,10 @@ export default {
       transition: 'slide-right',
       displayedPage: Number(this.$route.params.page) || 1,
       displayedItems: [],
-      peoples: [],
+      weibos: [],
       size: 10,
-      total: 0
+      total: 0,
+      user: {}
     };
   },
 
@@ -72,6 +80,10 @@ export default {
     page() {
       return Number(this.$route.query.page) || 1;
     },
+    user_id() {
+      return this.$route.params.user_id;
+    },
+
     maxPage() {
       return 12;
       // return Math.ceil(lists[this.type].length / itemsPerPage);
@@ -82,32 +94,34 @@ export default {
   },
 
   watch: {
-    page(to, from) {
-      this.fetchPeople();
+    async page(to, from) {
+      await this.fetchWeibo();
     }
   },
 
   async beforeMount() {
-    await this.fetchPeople();
+    this.user = (await findUserById(this.user_id)).data;
+    console.log(this.user);
+    await this.fetchWeibo();
 
-
+    console.log('use', this.$route.params.user_id);
   },
 
   beforeDestroy() {
   },
 
   methods: {
-    async fetchPeople() {
+    async fetchWeibo() {
       console.log(this.page);
-
-      const { list, total } = (await fetchPeople(
+      const { list, total } = (await fetchWeibo(
         {
           total: true,
           page: this.page,
-          size: this.size
+          size: this.size,
+          ...(this.user_id ? { user_id: this.user_id } : {})
         }
       )).data;
-      this.peoples = list;
+      this.weibos = list;
       this.total = total;
       this.displayedItems = list;
       console.log(list, total);
@@ -123,9 +137,9 @@ export default {
 };
 </script>
 
-<style lang="stylus" >
+<style lang="stylus" scoped>
 .news-view
-  padding-top 45px
+  padding-top 240px
 
 .news-list-nav, .news-list
   background-color #fff
@@ -174,7 +188,10 @@ export default {
   position absolute
   opacity 0
   transform translate(30px, 0)
-
+.user
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
 @media (max-width 600px)
   .news-list
     margin 10px 0
