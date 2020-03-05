@@ -18,6 +18,18 @@ module.exports = app => {
     retweet_num: { type: Number },
     comment_num: { type: Number },
 
+  }, { toJSON: { virtuals: true } });
+  WeiboSchema.set('toObject', { virtuals: true });
+  WeiboSchema.set('toJSON', { virtuals: true });
+  // https://cn.mongoosedoc.top/docs/populate.html#populate-virtuals?
+  WeiboSchema.virtual('author', {
+    ref: 'User', // The model to use
+    localField: 'user_id', // Find people where `localField`
+    foreignField: 'id', // is equal to `foreignField`
+    // If `justOne` is true, 'members' will be a single doc as opposed to
+    // an array. `justOne` is false by default.
+    justOne: true,
+    // options: { sort: { name: -1 }, limit: 5 } // Query options, see http://bit.ly/mongoose-query-options
   });
   WeiboSchema.index({ id: 1, user_id: 1, publish_time: 1, content: 1 }, { unique: true });
   //   return mongoose.model('User', WeiboSchema, { freezeTableName: true });

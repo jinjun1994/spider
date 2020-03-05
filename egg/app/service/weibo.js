@@ -16,14 +16,23 @@ class WeiboService extends Service {
    * @return {Array} 微博
    */
   async list(options, query) {
-    const { skip, limit, sort } = query;
-    const params = { sort: sort ? sort : { time: -1 } };
+    try {
+      const { skip, limit, sort } = query;
+      const params = { sort: sort ? sort : { publish_time: -1 } };
 
-    if (skip !== undefined && limit !== undefined) {
-      params.skip = skip;
-      params.limit = limit;
+      if (skip !== undefined && limit !== undefined) {
+        params.skip = skip;
+        params.limit = limit;
+      }
+      // https://cn.mongoosedoc.top/docs/populate.html#populate-virtuals
+      return await this.app.model.Weibo.find(options, null, params)
+        .populate({ path: 'author', select: 'nickname -_id -id weibo' });
+
+
+    } catch (error) {
+      throw error;
     }
-    return await this.app.model.Weibo.find(options, null, params);
+
   }
 
   async listWithCooperations(options, query) {
