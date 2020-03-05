@@ -12,7 +12,7 @@
         </router-link>
         <span
           class="score"
-          @click="$router.push({path:`/user/${item.id}`})"
+          @click="$router.push({path:`/user/${item.id}`}).catch(err=>{})"
         > {{ item.weibo_num }}</span>
         <!-- <el-button
           style="float: right; padding: 3px 0"

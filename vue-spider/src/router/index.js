@@ -13,7 +13,7 @@ const routes = [
   {
     path: '/weibo',
     name: 'Weibo',
-    component: () => import(/* webpackChunkName: "about" */ '../views/WeiboList.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/User.vue')
   },
   {
     path: '/user/:user_id',
