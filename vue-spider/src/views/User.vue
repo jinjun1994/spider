@@ -138,6 +138,9 @@ export default {
     order() {
       return this.$route.query.order;
     },
+    name() {
+      return this.$route.name;
+    },
 
     maxPage() {
       return 12;
@@ -158,6 +161,10 @@ export default {
     },
     async order(to, from) {
       await this.fetchWeibo();
+    },
+    async name(to, from) {
+      if (this.user_id) this.user = (await findUserById(this.user_id)).data;
+      await this.fetchWeibo();
     }
   },
 
@@ -167,6 +174,7 @@ export default {
     await this.fetchWeibo();
 
     console.log('use', this.$route.params.user_id);
+    console.log('use', this.$route);
   },
 
   beforeDestroy() {

@@ -76,6 +76,14 @@
         {{ item.publish_tool }}
         {{ new Date(item.publish_time).toLocaleString() }}
         {{ item.publish_place==='无'?"":item.publish_place }}
+
+        <a
+          v-if="$route.name!=='User'"
+          style="cursor: pointer;"
+          @click="$router.push({path:`/user/${item.user_id}`})"
+        >
+          {{ item.author.nickname }}
+        </a>
       </div>
     </el-card>
   </li>
@@ -118,4 +126,5 @@ export default {
     display: inline-block;
     max-width:33%
   }
+
 </style>
