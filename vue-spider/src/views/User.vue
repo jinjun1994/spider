@@ -42,6 +42,15 @@
           </el-table-column>
         </el-table>
         <div class="block">
+          <el-input
+            v-model="input"
+            clearable
+            :debounce="300"
+            style="max-width:500px"
+            placeholder="请输内容搜索"
+            @input="inputChange"
+          >
+          </el-input>
           <el-pagination
             layout="prev, sizes,pager, next,jumper"
             :total="total"
@@ -96,7 +105,7 @@
 import { fetchWeibo, findUserById } from '../api';
 import WeiboItem from '../components/WeiboItem';
 import Item from '../components/Item';
-
+const debounce = require('debounce');
 export default {
   name: 'ItemList',
 
@@ -117,7 +126,8 @@ export default {
       weibos: [],
       total: 0,
       user: {},
-      tableData: []
+      tableData: [],
+      input: ''
     };
   },
 
@@ -137,6 +147,9 @@ export default {
     },
     order() {
       return this.$route.query.order;
+    },
+    content() {
+      return this.$route.query.content;
     },
     name() {
       return this.$route.name;
@@ -160,6 +173,9 @@ export default {
       await this.fetchWeibo();
     },
     async order(to, from) {
+      await this.fetchWeibo();
+    },
+    async content(to, from) {
       await this.fetchWeibo();
     },
     async name(to, from) {
@@ -190,6 +206,7 @@ export default {
           page: this.page,
           size: this.size,
           ...(this.user_id ? { user_id: this.user_id } : {}),
+          ...(this.content ? { content: this.content } : {}),
           ...(sort ? { sort } : {}),
           ...(order ? { order } : {})
         }
@@ -206,6 +223,19 @@ export default {
       }).catch(err => {});
 
     },
+    // inputChange(content) {
+    //   this.$router.push({
+    //     query: this.merge(this.$route.query, { content })
+    //   }).catch(err => {});
+
+    // },
+    inputChange: debounce(function(content) {
+      console.log(content);
+      this.$router.push({
+        query: this.merge(this.$route.query, { content })
+      }).catch(err => {});
+    }, 300),
+
     handleSizeChange(size) {
       this.$router.push({
         query: this.merge(this.$route.query, { size })

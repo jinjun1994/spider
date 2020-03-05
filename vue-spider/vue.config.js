@@ -1,8 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  // publicPath: '',
-  // outputDir: 'build',
+  // publicPath: 'spider',
+  outputDir: 'spider',
   productionSourceMap: false, // close sourceMap for production
   chainWebpack: config => {
     config.module.rule('eslint').use('eslint-loader').options({
