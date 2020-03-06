@@ -1013,29 +1013,33 @@ class Weibo(object):
             url = 'https://weibo.cn/%s' % (self.user_config['user_uri'])
             selector = self.handle_html(url)
             self.get_user_info(selector)  # 获取用户昵称、微博数、关注数、粉丝数
-            page_num = self.get_page_num(selector)  # 获取微博总页数
-            wrote_num = 0
-            page1 = 0
-            random_pages = random.randint(1, 5)
-            self.start_time = datetime.now().strftime('%Y-%m-%d %H:%M')
-            for page in tqdm(range(1, page_num + 1), desc='Progress'):
-                is_end = self.get_one_page(page)  # 获取第page页的全部微博
-                if is_end:
-                    break
+            since_date = self.str_to_time(self.user_config['since_date'])
+            now = datetime.now().strftime('%Y-%m-%d %H:%M')
+            now = datetime.strptime(now, '%Y-%m-%d %H:%M')
+            if since_date <= now:
+                page_num = self.get_page_num(selector)  # 获取微博总页数
+                wrote_num = 0
+                page1 = 0
+                random_pages = random.randint(1, 5)
+                self.start_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+                for page in tqdm(range(1, page_num + 1), desc='Progress'):
+                    is_end = self.get_one_page(page)  # 获取第page页的全部微博
+                    if is_end:
+                        break
 
-                if page % 20 == 0:  # 每爬20页写入一次文件
-                    self.write_data(wrote_num)
-                    wrote_num = self.got_num
+                    if page % 20 == 0:  # 每爬20页写入一次文件
+                        self.write_data(wrote_num)
+                        wrote_num = self.got_num
 
-                # 通过加入随机等待避免被限制。爬虫速度过快容易被系统限制(一段时间后限
-                # 制会自动解除)，加入随机等待模拟人的操作，可降低被系统限制的风险。默
-                # 认是每爬取1到5页随机等待6到10秒，如果仍然被限，可适当增加sleep时间
-                if (page - page1) % random_pages == 0 and page < page_num:
-                    sleep(random.randint(6, 10))
-                    page1 = page
-                    random_pages = random.randint(1, 5)
+                    # 通过加入随机等待避免被限制。爬虫速度过快容易被系统限制(一段时间后限
+                    # 制会自动解除)，加入随机等待模拟人的操作，可降低被系统限制的风险。默
+                    # 认是每爬取1到5页随机等待6到10秒，如果仍然被限，可适当增加sleep时间
+                    if (page - page1) % random_pages == 0 and page < page_num:
+                        sleep(random.randint(6, 10))
+                        page1 = page
+                        random_pages = random.randint(1, 5)
 
-            self.write_data(wrote_num)  # 将剩余不足20页的微博写入文件
+                self.write_data(wrote_num)  # 将剩余不足20页的微博写入文件
             if not self.filter:
                 print(u'共爬取' + str(self.got_num) + u'条微博')
             else:
@@ -1148,22 +1152,22 @@ def main():
         with open(config_path) as f:
             try:
                 config = json.loads(  json.dumps({
-	"user_id_list": 'user_id_list.txt',
-    "filter": 1,
-    "since_date": since,
-    "write_mode": ["csv", "txt",'mongo'],
-    "pic_download": 0,
-    "video_download": 0,
-    "cookie": "_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803",
-    "mongodb_url":mongodb,
-    "mysql_config": {
-        "host": "localhost",
-        "port": 3306,
-        "user": "root",
-        "password": "123456",
-        "charset": "utf8mb4"
-    }
-    }))
+                "user_id_list": 'user_id_list.txt',
+                "filter": 0,            
+                "since_date": since,
+                "write_mode": ["csv", "txt",'mongo','json'],
+                "pic_download": 1,
+                "video_download": 1,
+                "cookie": "_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803",
+                "mongodb_url":mongodb,
+                "mysql_config": {
+                "host": "localhost",
+                "port": 3306,
+                "user": "root",
+                "password": "123456",
+                "charset": "utf8mb4"
+               }
+             }))
             except ValueError:
                 sys.exit(u'config.json 格式不正确，请参考 '
                          u'https://github.com/dataabc/weiboSpider#3程序设置')
