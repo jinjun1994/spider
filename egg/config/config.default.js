@@ -32,6 +32,13 @@ module.exports = appInfo => {
         ctx.status = 500;
       },
 
+    },
+
+    logger: {
+      level: 'INFO',
+      consoleLevel: 'INFO',
+      outputJSON: true,
+      ...(process.env.NODE_ENV === 'production' ? { dir: '/html/log' } : {})
     }
   };
 

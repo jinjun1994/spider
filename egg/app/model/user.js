@@ -21,9 +21,10 @@ module.exports = app => {
     /**
      * 执行状态
      * 0，未执行
-     * 1，执行中
-     * 2，执行成功
-     * 3，失败
+     * 1，执行过
+     * 2，执行中
+     * 4，执行成功
+     * 4，失败
      */
     status: { type: Number, required: true, default: 0 },
 

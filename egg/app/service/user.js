@@ -73,24 +73,28 @@ class UserService extends Service {
     return await this.app.model.User.findOne({ id });
   }
   async findUserIdByUrl(url) {
+    try {
+      const browser = await puppeteer.launch({
+        headless: true,
+        // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
+      });
+      const page = await browser.newPage();
+      await page.goto(url,
+        // { waitUntil: 'networkidle0' }
+      );
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
-    });
-    const page = await browser.newPage();
-    await page.goto(url,
-      // { waitUntil: 'networkidle0' }
-    );
+      await page.waitForFunction('window.$CONFIG&&window.$CONFIG.oid');
+      const use_id = await page.evaluate('window.$CONFIG.oid'); // 输出 "3"
+      const title = await page.title();
 
-    await page.waitForFunction('window.$CONFIG&&window.$CONFIG.oid');
-    const use_id = await page.evaluate('window.$CONFIG.oid'); // 输出 "3"
-    const title = await page.title();
+      console.info(`标题是: ${title}`);
+      console.info(`use_id: ${use_id}`);
+      browser.close();
+      return use_id;
+    } catch (error) {
+      return;
+    }
 
-    console.info(`标题是: ${title}`);
-    console.info(`use_id: ${use_id}`);
-    browser.close();
-    return use_id;
 
   }
   async create(user) {
