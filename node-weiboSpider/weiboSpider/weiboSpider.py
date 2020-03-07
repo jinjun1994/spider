@@ -1105,6 +1105,7 @@ def main():
     cookie = ""
     since = ""
     mongodb=""
+    user=""
 
     try:
         """
@@ -1117,17 +1118,17 @@ def main():
             返回值options是以元组为元素的列表，每个元组的形式为：(选项串, 附加参数)，如：('-i', '192.168.0.1')
             返回值args是个列表，其中的元素是那些不含'-'或'--'的参数。
         """
-        opts, args = getopt.getopt(sys.argv[1:], "hi:c:s:m:", ["help", "id=", "cookie=","since=","mongodb="])
+        opts, args = getopt.getopt(sys.argv[1:], "hi:c:s:m:u:", ["help", "id=", "cookie=","since=","mongodb=","user="])
     except getopt.GetoptError:
-        print('Error: spider.py -i <id> -c <cookie> -s <since> -m <mongodb>')
-        print('   or: spider.py --id=<id> --cookie=<cookie> --mongodb=<mongodb>')
+        print('Error: spider.py -i <id> -c <cookie> -s <since> -m <mongodb> -u <user>')
+        print('   or: spider.py --id=<id> --cookie=<cookie> --mongodb=<mongodb> --user=<user>')
         sys.exit(2)
 
     # 处理 返回值options是以元组为元素的列表。
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print('spider.py -i <id> -c <cookie> -s <since> -m <mongodb>')
-            print('or: spider.py --id=<id> --cookie=<cookie> --since=<since> --mongodb=<mongodb>')
+            print('spider.py -i <id> -c <cookie> -s <since> -m <mongodb> -u <user>')
+            print('or: spider.py --id=<id> --cookie=<cookie> --since=<since> --user=<user>')
             sys.exit()
         elif opt in ("-i", "--id"):
              id.append(arg)
@@ -1137,11 +1138,15 @@ def main():
             since = arg
         elif opt in ("-m", "--mongodb"):
             mongodb = arg
+        elif opt in ("-u", "--user"):
+            user = arg
     print('opts: ', opts)
     print('id: ', id)
     print('cookie: ', cookie)
     print('since: ', since)
     print('mongodb: ', mongodb)
+    print('user: ', user)
+    print('user: ', 'user'+os.sep+user)
     # sys.exit(2)
     try:
         config_path = os.path.split(
@@ -1152,7 +1157,7 @@ def main():
         with open(config_path) as f:
             try:
                 config = json.loads(  json.dumps({
-                "user_id_list": 'user_id_list.txt',
+                "user_id_list": 'user'+os.sep+user,
                 "filter": 0,            
                 "since_date": since,
                 "write_mode": ["csv", "txt",'mongo','json'],
