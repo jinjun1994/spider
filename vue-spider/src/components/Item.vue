@@ -42,6 +42,11 @@
           :href="`https://jizhi.jinjun.wiki/weibos/${item.nickname}/${item.id}.txt`"
           :download="`${item.nickname}.txt`"
         >  text格式</a>
+        <a
+          style="margin: 0 0.5em"
+          :href="`https://jizhi.jinjun.wiki/weibos/${item.nickname}/${item.id}.json`"
+          :download="`${item.nickname}.txt`"
+        >  json格式</a>
       </div>
       <div class="host">
       </div>

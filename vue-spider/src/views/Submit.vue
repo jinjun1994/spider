@@ -1,12 +1,31 @@
 <template>
-  <div class="about">
+  <div class="submit">
     <div class="news-view">
       <div class="news-list-nav">
         <div class="block">
-          <p>提供优质微博、twitter抓取等 </p>
-          <p>有问题请联系 </p>
-          <p>微博： <a href="https://weibo.com/u/2877151580">程序员金俊</a> </p>
-          <p>微信： jinjun199403</p>
+          <img
+
+            src="../assets/images/zhuye.png"
+            alt=""
+          >
+          <p>将博主主页链接提交到下方，点击提交即可自动爬取。</p>
+          <p>抓取完成通知功能正在开发中，新提交博主抓取速度约1万条/小时。</p>
+          <p>已在列表中博主每分钟抓取一次</p>
+          <el-input
+            v-model="input"
+            clearable
+            :debounce="300"
+            style="max-width:500px"
+            placeholder="请输主页链接"
+            @input="inputChange"
+          >
+          </el-input>
+          <el-button
+            :disabled="!input"
+            @click="submit"
+          >
+            提交
+          </el-button>
         </div>
       </div>
     </div>
@@ -68,9 +87,8 @@ export default {
 </script>
 
 <style lang="stylus">
-.about
+.submit
   .news-view
-    height 100%
     padding-top 160px
 
   .news-list-nav, .news-list

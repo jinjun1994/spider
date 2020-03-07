@@ -14,23 +14,29 @@
         <router-link to="/weibo">
           微博
         </router-link>
-        <router-link to="/post">
+        <router-link to="/submit">
           提交
         </router-link>
-        <router-link to="/ask">
+        <!-- <router-link to="/ask">
           Ask
         </router-link>
         <router-link to="/job">
           Jobs
-        </router-link>
-        <a
+        </router-link> -->
+        <!-- <a
           class="github"
           href="https://github.com/vuejs/vue-hackernews-2.0"
           target="_blank"
           rel="noopener"
         >
           集智阁
-        </a>
+        </a> -->
+
+        <div class="github">
+          <router-link to="/about">
+            集智阁
+          </router-link>
+        </div>
       </nav>
     </header>
     <transition
