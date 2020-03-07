@@ -40,7 +40,15 @@ class UsersController extends Controller {
       throw err;
     }
   }
-
+  async bulkWrite(ctx) {
+    try {
+      const { bulkWrite } = ctx.request.body;
+      ctx.body = await ctx.service.user.bulkWrite(bulkWrite);
+    } catch (err) {
+      ctx.logger.warn(err);
+      throw err;
+    }
+  }
 
 }
 module.exports = UsersController;
