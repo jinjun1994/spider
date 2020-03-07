@@ -1,4 +1,6 @@
 const path = require('path');
+const CompressionPlugin = require('compression-webpack-plugin');
+const productionGzipExtensions = ['js', 'css']
 
 module.exports = {
   // publicPath: 'spider',
@@ -14,6 +16,14 @@ module.exports = {
       args[0].title = '集智阁'
       return args
     })
+    if (process.env.NODE_ENV === 'production') {
+      // 生产环境 https://blog.csdn.net/qq_39953537/article/details/82188438
+      config.plugin('CompressionPlugin').use(CompressionPlugin);
+      // https://medium.com/@aetherus.zhou/vue-cli-3-performance-optimization-55316dcd491c
+  } else {
+      // 开发环境
+  }
+
   },
 
   // configureWebpack: {
