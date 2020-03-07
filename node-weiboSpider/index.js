@@ -1,4 +1,10 @@
 let {PythonShell} = require('python-shell')
+const notifier = require('node-notifier');
+const file = require('./src/file.js');
+
+
+
+
 
 PythonShell.runString('x=1+1;print(x)', null, function (err) {
   if (err) throw err;
@@ -32,6 +38,10 @@ function main(){
    console.log(message);
    if (message==='start') {
  console.log("开始");
+ notifier.notify({
+  title: 'Node Spider ',
+  message: '开始抓取'
+});
    }
  });
  
@@ -43,11 +53,20 @@ function main(){
    // handle stderr (a line of text from stderr) 
    // Fires when the process has been terminated, with an error or not.
    console.log(close,'close');
+   notifier.notify({
+    title: 'Node Spider ',
+    message: '抓取完毕'
+  });
+  file.updateTime('./weiboSpider/user_id_list.txt')
  });
  spider.on('error', function (error) {
    // handle stderr (a line of text from stderr)
    // Fires when the process terminates with a non-zero exit code.
    console.log(error,'error');
+   notifier.notify({
+    title: 'Node Spider ',
+    message: '运行出错'
+  });
  });
 //  setTimeout(main, time);
 }
