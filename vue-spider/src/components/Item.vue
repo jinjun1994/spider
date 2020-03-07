@@ -28,7 +28,7 @@
         粉丝：{{ item.followers }}
       </div>
       <div class="host">
-        上次抓取 {{ `十分钟` }} 前
+        上次抓取 {{ new Date(item.time).toLocaleString() }}
       </div>
       <div class="host">
         微博合集下载：
