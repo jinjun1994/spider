@@ -1,7 +1,7 @@
 let {PythonShell} = require('python-shell')
 const notifier = require('node-notifier');
 const file = require('./src/file.js');
-const shell = require('shelljs');
+// const shell = require('shelljs');
 
 
 
@@ -17,7 +17,7 @@ PythonShell.runString('x=1+1;print(x)', null, function (err) {
 //   console.log('finished');
 // });
 
-const time =60000
+const time =120000
 // 创建实例 
 const cookie ="_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803"
 async function main(){
