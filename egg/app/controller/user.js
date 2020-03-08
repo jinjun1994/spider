@@ -14,16 +14,22 @@ class UsersController extends Controller {
 
   async index(ctx) {
     try {
-      const { nickname } = ctx.query;
-      let options;
-      if (nickname) {
-        options = {
-          nickname: new RegExp(nickname, 'i')
-        };
-      } else {
-        options = {
-        };
-      }
+      const { nickname, where, regexp } = ctx.query;
+
+      const options = {
+        ...(nickname ? { nickname: new RegExp(nickname, 'i') } : {}),
+        // ...((where && regexp) ? { [where]: new RegExp(`[${regexp}]$`) } : {}),
+        ...((where && regexp) ? { [where]: new RegExp(regexp) } : {}),
+
+      };
+      // if (nickname) {
+      //   options = {
+      //     nickname: new RegExp(nickname, 'i')
+      //   };
+      // } else {
+      //   options = {
+      //   };
+      // }
 
       ctx.body = await ctx.service.crud.index(ctx.service.user, options);
     } catch (err) {
