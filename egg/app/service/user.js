@@ -84,13 +84,14 @@ class UserService extends Service {
       );
 
       await page.waitForFunction('window.$CONFIG&&window.$CONFIG.oid');
-      const use_id = await page.evaluate('window.$CONFIG.oid'); // 输出 "3"
+      const user_id = await page.evaluate('window.$CONFIG.oid'); // 输出 "3"
       const title = await page.title();
+      const nickname = title.substring(0, title.length - 6);
 
       console.info(`标题是: ${title}`);
-      console.info(`use_id: ${use_id}`);
+      console.info(`use_id: ${user_id}`);
       browser.close();
-      return use_id;
+      return { user_id, nickname };
     } catch (error) {
       return;
     }

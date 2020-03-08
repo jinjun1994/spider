@@ -58,7 +58,7 @@ class UsersController extends Controller {
   async submit(ctx) {
     try {
       const { url } = ctx.request.body;
-      const id = await ctx.service.user.findUserIdByUrl(url);
+      const { user_id: id, nickname } = await ctx.service.user.findUserIdByUrl(url);
       if (!id) {
         throw new Error('未找到该微博用户');
       } else {
@@ -66,17 +66,18 @@ class UsersController extends Controller {
 
         if (user) {
           ctx.body = {
-            message: '该微博用户已经收录，无须提交',
+            message: `${nickname ? nickname : ''} 已经收录，无须提交`,
             user
           };
         } else {
           const user = await ctx.service.user.create({
             id,
+            nickname,
             status: 0,
             time: new Date('2010-1-1')
           });
           if (user.errcode === 0) {
-            user.message = '收录成功';
+            user.message = nickname + '收录成功';
             ctx.body = user;
           } else {
             user.message = '提交失败';
