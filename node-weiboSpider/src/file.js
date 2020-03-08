@@ -40,10 +40,13 @@ async updateTime(path){
     }
        
 },
-async getUserList(){
+async getUserList(where,regexp){
  try {
     const users =await  axiosInstance.get('/user',{params:{
         full:true,
+        where:'id',
+        ...(where ? { where } : {}),
+        ...(regexp ? { regexp } : {}),
     }})
 
     console.log(users.data.list)
@@ -60,7 +63,8 @@ async getUserList(){
     
     }
     console.log(text)
-    const fileName = day().format("YYYYMMDDHHmm")
+    const filter = (where && regexp) ?`_${where}_${regexp}`:''
+    const fileName = day().format("YYYYMMDDHHmm")+filter
     console.log(text)
    await fs.writeFileSync(`./weiboSpider/user/${fileName}.txt`, text, "utf8");
 
