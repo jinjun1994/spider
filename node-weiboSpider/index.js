@@ -19,8 +19,11 @@ PythonShell.runString('x=1+1;print(x)', null, function (err) {
 
 const time =120000
 // 创建实例 
-const cookie ="_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803"
-async function main(where,regexp){
+const cookies =[
+  "_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803",
+"ALF=1586225880; SCF=AhkvgS54pYYJqfU9BWpywPguH16eeVHlVIhzXg6zBlumkPTx9eya1l1DUp9WXplWN7UcJouIM2E0AhbBoocohUQ.; SUB=_2A25zYCWJDeRhGeFK61YU-CrNyDSIHXVQq0vBrDV6PUNbktAKLUj1kW1NQ7eego910Jywe1zkIrzG4ZgeTjIeq_Fr; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WW0407gFQa.qmJYdCZ7eamp5JpX5KMhUgL.FoMXehBf1hBpe0n2dJLoIp7LxKML1KBLBKnLxKqL1hnLBoMNSh5XSKnXeKeR; SUHB=0TPFPYlxYipX6C; SSOLoginState=1583633881; _T_WM=01c403a19130536c596f607103ae104b"
+]
+async function main(where,regexp,cookie,time){
 
  const  userListFile= await file.getUserList(where,regexp)
 
@@ -43,11 +46,11 @@ async function main(where,regexp){
    console.log(message);
    if (message==='start') {
  console.log("开始");
- notifier.notify({
-  title: 'Node Spider ',
-  message: '开始抓取',
-  sound: false
-});
+//  notifier.notify({
+//   title: 'Node Spider ',
+//   message: '开始抓取',
+//   sound: false
+// });
    }
  });
  
@@ -59,11 +62,11 @@ async function main(where,regexp){
    // handle stderr (a line of text from stderr) 
    // Fires when the process has been terminated, with an error or not.
    console.log(close,'close');
-   notifier.notify({
-    title: 'Node Spider ',
-    message: '抓取完毕',
-    sound: false
-  });
+  //  notifier.notify({
+  //   title: 'Node Spider ',
+  //   message: '抓取完毕',
+  //   sound: false
+  // });
   await file.updateTime(`./weiboSpider/user/${userListFile}`)
   // if (shell.exec('weibo').code !== 0) {
   //   shell.echo('error');
@@ -72,7 +75,7 @@ async function main(where,regexp){
   //   shell.echo('copy weibo success');
   // }
   console.log("success runn again");
-   setTimeout(main, time);
+   setTimeout(main, time,where,regexp,cookie,time);
  });
  spider.on('error', function (error) {
    // handle stderr (a line of text from stderr)
@@ -86,6 +89,7 @@ async function main(where,regexp){
 
 }
 
-main("id","[0-2]$")
-main("id","[3-5]$")
-main("id","[6-9]$")
+main("id","[0-1]$",cookies[0],120000)
+main("id","[2-3]$",cookies[1],120000)
+main("id","[4-6]$",cookies[0],120000)
+main("id","[7-9]$",cookies[1],120000)
