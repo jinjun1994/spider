@@ -46,6 +46,7 @@ followers: 338100
             :total="total"
             :page-sizes="[10, 20, 30, 40]"
             :page-size="size"
+            :current-page.sync="currentPage"
             @current-change="currentChange"
           >
           </el-pagination>
@@ -108,7 +109,8 @@ export default {
       peoples: [],
       total: 0,
       tableData: [],
-      input: ''
+      input: '',
+      currentPage: 1
     };
   },
 
@@ -166,6 +168,7 @@ export default {
   methods: {
     async fetchPeople() {
       console.log(this.page);
+      this.currentPage = this.page;
       const { sort, order } = this.$route.query;
       const { list, total } = (await fetchPeople(
         {

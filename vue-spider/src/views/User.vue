@@ -56,6 +56,7 @@
             :total="total"
             :page-sizes="[10, 20, 30, 40]"
             :page-size="size"
+            :current-page.sync="currentPage"
             @size-change="handleSizeChange"
             @current-change="currentChange"
           >
@@ -127,7 +128,8 @@ export default {
       total: 0,
       user: {},
       tableData: [],
-      input: ''
+      input: '',
+      currentPage: 1
     };
   },
 
@@ -185,6 +187,8 @@ export default {
   },
 
   async beforeMount() {
+    console.log(this.size);
+    console.log(this.page);
     if (this.user_id) this.user = (await findUserById(this.user_id)).data;
     console.log(this.user);
     await this.fetchWeibo();
@@ -199,6 +203,8 @@ export default {
   methods: {
     async fetchWeibo() {
       console.log(this.page);
+      this.currentPage = this.page;
+      console.log(this.size);
       const { sort, order } = this.$route.query;
       const { list, total } = (await fetchWeibo(
         {
