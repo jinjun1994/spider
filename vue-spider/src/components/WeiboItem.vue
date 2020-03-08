@@ -34,14 +34,14 @@
       <template
         v-if="item.original_pictures!=='无'"
       >
-        <img
-          v-for="item in item.original_pictures.split(',')"
-          :key="item"
-          :src="item"
+        <!-- <img
+          v-for="img in item.original_pictures.split(',')"
+          :key="img"
+          :src="img"
           class="image"
           referrerpolicy="no-referrer"
-        >
-        <!-- <el-image
+        > -->
+        <el-image
           v-for="img in item.original_pictures.split(',')"
           :key="img"
           :src="img"
@@ -49,7 +49,27 @@
           referrer-policy="no-referrer"
           :preview-src-list="item.original_pictures.split(',')"
         >
-        </el-image> -->
+        </el-image>
+      </template>
+      <template
+        v-if="item.retweet_pictures!=='无'"
+      >
+        <!-- <img
+          v-for="img in item.retweet_pictures.split(',')"
+          :key="img"
+          :src="img"
+          class="image"
+          referrerpolicy="no-referrer"
+        > -->
+        <el-image
+          v-for="img in item.retweet_pictures.split(',')"
+          :key="img"
+          :src="img"
+          class="image"
+          referrer-policy="no-referrer"
+          :preview-src-list="item.retweet_pictures.split(',')"
+        >
+        </el-image>
       </template>
       <div class="host top">
         <a
@@ -124,7 +144,7 @@ export default {
 <style lang="stylus" scoped >
   .image {
     display: inline-block;
-    max-width:33%
+    max-width:32%
   }
 
 </style>
