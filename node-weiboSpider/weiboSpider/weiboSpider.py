@@ -1020,7 +1020,7 @@ class Weibo(object):
                 page_num = self.get_page_num(selector)  # 获取微博总页数
                 wrote_num = 0
                 page1 = 0
-                random_pages = random.randint(1, 5)
+                random_pages = random.randint(1, 3)
                 self.start_time = datetime.now().strftime('%Y-%m-%d %H:%M')
                 for page in tqdm(range(1, page_num + 1), desc='Progress'):
                     is_end = self.get_one_page(page)  # 获取第page页的全部微博
@@ -1037,7 +1037,7 @@ class Weibo(object):
                     if (page - page1) % random_pages == 0 and page < page_num:
                         sleep(random.randint(6, 10))
                         page1 = page
-                        random_pages = random.randint(1, 5)
+                        random_pages = random.randint(1, 3)
 
                 self.write_data(wrote_num)  # 将剩余不足20页的微博写入文件
             if not self.filter:

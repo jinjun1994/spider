@@ -20,8 +20,12 @@ PythonShell.runString('x=1+1;print(x)', null, function (err) {
 const time =120000
 // 创建实例 
 const cookies =[
+  // zhenzhou
   "_T_WM=67549327500; XSRF-TOKEN=ac563a; WEIBOCN_FROM=1110006030; SUB=_2A25zSTuuDeRhGeRG7FUQ9S_JwzyIHXVQskXmrDV6PUJbkdANLUvgkW1NTeDC5UwnAwS0wPA93rl7Ab7WsZk1-Oc8; SUHB=0KAxB6GtJUe0u0; SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SSOLoginState=1582124030; MLOGIN=1; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D10000011%26fid%3D102803",
-"ALF=1586225880; SCF=AhkvgS54pYYJqfU9BWpywPguH16eeVHlVIhzXg6zBlumkPTx9eya1l1DUp9WXplWN7UcJouIM2E0AhbBoocohUQ.; SUB=_2A25zYCWJDeRhGeFK61YU-CrNyDSIHXVQq0vBrDV6PUNbktAKLUj1kW1NQ7eego910Jywe1zkIrzG4ZgeTjIeq_Fr; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WW0407gFQa.qmJYdCZ7eamp5JpX5KMhUgL.FoMXehBf1hBpe0n2dJLoIp7LxKML1KBLBKnLxKqL1hnLBoMNSh5XSKnXeKeR; SUHB=0TPFPYlxYipX6C; SSOLoginState=1583633881; _T_WM=01c403a19130536c596f607103ae104b"
+//apple
+  "ALF=1586225880; SCF=AhkvgS54pYYJqfU9BWpywPguH16eeVHlVIhzXg6zBlumkPTx9eya1l1DUp9WXplWN7UcJouIM2E0AhbBoocohUQ.; SUB=_2A25zYCWJDeRhGeFK61YU-CrNyDSIHXVQq0vBrDV6PUNbktAKLUj1kW1NQ7eego910Jywe1zkIrzG4ZgeTjIeq_Fr; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WW0407gFQa.qmJYdCZ7eamp5JpX5KMhUgL.FoMXehBf1hBpe0n2dJLoIp7LxKML1KBLBKnLxKqL1hnLBoMNSh5XSKnXeKeR; SUHB=0TPFPYlxYipX6C; SSOLoginState=1583633881; _T_WM=01c403a19130536c596f607103ae104b",
+//anqin
+"SCF=AhvJUhUx7XjzOcJTOsfg5SPCNiS1bETr998DEnIo15BdV-myJoT-GxLBcaPm655UodI6qeAm_BVi2mova3lKkac.; SUB=_2A25zYN4vDeRhGeFK61oW8C_LyzSIHXVQquJnrDV6PUJbkdAfLU_nkW1NQ4_O5jNUbpPns-EsVkTX_gIcTzrOSTLU; SUHB=0ElqrveOOiA5qW; SSOLoginState=1583656575; _T_WM=14377052981; WEIBOCN_FROM=1110006030; MLOGIN=1; M_WEIBOCN_PARAMS=uicode%3D20000174"
 ]
 async function main(where,regexp,cookie,time){
 
@@ -89,7 +93,14 @@ async function main(where,regexp,cookie,time){
 
 }
 
-main("id","[0-1]$",cookies[0],120000)
-main("id","[2-3]$",cookies[1],120000)
-main("id","[4-6]$",cookies[0],120000)
-main("id","[7-9]$",cookies[1],120000)
+main("id","[0]$",cookies[0],60000)
+main("id","[1]$",cookies[1],70000)
+main("id","[2]$",cookies[2],100000)
+main("id","[3]$",cookies[1],120000)
+main("id","[4]$",cookies[2],90000)
+main("id","[5]$",cookies[0],300000)
+main("id","[6]$",cookies[1],333000)
+main("id","[7]$",cookies[2],140000)
+main("id","[8]$",cookies[0],130000)
+main("id","[9]$",cookies[2],222222)
+
