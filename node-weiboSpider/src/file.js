@@ -2,9 +2,13 @@
 const axios =require('axios')
 const fs = require('fs');
 const day = require('dayjs');
-const axiosInstance = axios.create({ baseURL: "http://127.0.0.1:7001" });
-axiosInstance.defaults.headers.Cookie = "csrfToken=iKR4tho-ZwEA4zDWvk-4twH4"; // attach cookie to axiosInstance for future requests
-axiosInstance.defaults.headers["x-csrf-token"] = "iKR4tho-ZwEA4zDWvk-4twH4"; // attach cookie to axiosInstance for future requests
+const utc = require('dayjs/plugin/utc')
+day.extend(utc)
+// day().utcOffset(8) 
+// const axiosInstance = axios.create({ baseURL: "http://127.0.0.1:7001" });
+const axiosInstance = axios.create({ baseURL: "https://jizhi.jinjun.wiki/api" });
+axiosInstance.defaults.headers.Cookie = "csrfToken=TBGV4KxSTGN9mwe263tvl6ZY"; // attach cookie to axiosInstance for future requests
+axiosInstance.defaults.headers["x-csrf-token"] = "TBGV4KxSTGN9mwe263tvl6ZY"; // attach cookie to axiosInstance for future requests
 // https://github.com/eggjs/egg/issues/3050#issuecomment-429039813
 
 
@@ -19,13 +23,15 @@ async updateTime(path){
     for(user of users) {
         info = user.split(" ")
         console.log(info)
+      
         if (!info[2]) return
+        const  time = day(info[2] + (info[3] ? ' ' + info[3]:'')).utc().format()
         bulkWrite.push(
             { updateOne :
            {
               "filter": { id : info[0] },
               "update": {
-                time: info[2] + (info[3] ? ' ' + info[3]:'')
+                time: time
               },           
 
            }
@@ -52,7 +58,9 @@ async getUserList(where,regexp){
     console.log(users.data.list)
     const list = users.data.list
     let text =''
+    
     for (const user of list){
+        console.log(user.time);
         const line =  user.id+' '+user.nickname+' '+day(user.time).format("YYYY-MM-DD HH:mm") 
         if (text){
             text =text +'\n' + line 
