@@ -75,6 +75,7 @@ class UserService extends Service {
   async findUserIdByUrl(url) {
     try {
       const browser = await puppeteer.launch({
+        args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
         headless: true,
         // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });

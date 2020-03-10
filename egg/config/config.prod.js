@@ -16,6 +16,9 @@ module.exports = appInfo => {
       url: process.env.SPIDER_MONGODB || 'mongodb://127.0.0.1/weibo',
       // url: 'mongodb://localhost/weibo',
       options: {
+        auth: { authSource: 'admin' },
+        user: process.env.SPIDER_MONGODB_USER,
+        pass: process.env.SPIDER_MONGODB_PASS,
         // reconnectInterval: 15000,
         // https://github.com/Automattic/mongoose/issues/6890
         useCreateIndex: true,
@@ -24,21 +27,13 @@ module.exports = appInfo => {
       },
       // mongoose global plugins, expected a function or an array of function and options
     },
-    onerror: {
-      all(err, ctx) {
-        // 在此处定义针对所有响应类型的错误处理方法
-        // 注意，定义了 config.all 之后，其他错误处理方法不会再生效
-        ctx.body = { message: err.message || 'error' };
-        ctx.status = 500;
-      },
 
-    },
 
     logger: {
       level: 'INFO',
       consoleLevel: 'INFO',
       outputJSON: true,
-      ...(process.env.NODE_ENV === 'production' ? { dir: '/html/log' } : {})
+      dir: '/home/wwwroot/jizhi.jinjun.wiki/egg_log'
     }
   };
 
