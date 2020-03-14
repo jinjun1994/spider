@@ -31,7 +31,11 @@ module.exports = app => {
     justOne: true,
     // options: { sort: { name: -1 }, limit: 5 } // Query options, see http://bit.ly/mongoose-query-options
   });
-  WeiboSchema.index({ id: 1, user_id: 1, publish_time: 1, content: 1 }, { unique: true });
+  // WeiboSchema.index({ id: 1, user_id: 1, publish_time: 1, content: 1 }, { unique: true });
+  WeiboSchema.index({ publish_time: 1 });
+  WeiboSchema.index({ up_num: 1 });
+  WeiboSchema.index({ retweet_num: 1 });
+  WeiboSchema.index({ comment_num: 1 });
   //   return mongoose.model('User', WeiboSchema, { freezeTableName: true });
   return mongoose.model('Weibo', WeiboSchema, 'weibo');
 //   https://stackoverflow.com/questions/7486528/mongoose-force-collection-name

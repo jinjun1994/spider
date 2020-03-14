@@ -8,17 +8,16 @@ class WeiboController extends Controller {
 
   async index(ctx) {
     try {
-      const { content, user_id } = ctx.query;
-      let options;
-      if (content) {
-        options = {
-          content: new RegExp(content, 'i')
-        };
-      } else {
-        options = {
-        };
-      }
-      if (user_id) options.user_id = user_id;
+      const { content, user_id, original, origtrueinal_pictures, retweet_pictures, video_url } = ctx.query;
+
+      const options = {
+        ...(content ? { content: new RegExp(content, 'i') } : {}),
+        ...(user_id ? { user_id } : {}),
+        ...(original ? { original: original === 'true' } : {}),
+        ...(origtrueinal_pictures ? { origtrueinal_pictures: { $ne: null } } : {}),
+        ...(retweet_pictures ? { retweet_pictures: { $ne: null } } : {}),
+        ...(video_url ? { video_url: { $ne: null } } : {}),
+      };
 
       ctx.body = await ctx.service.crud.index(ctx.service.weibo, options);
     } catch (err) {
