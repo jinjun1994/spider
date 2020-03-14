@@ -2,45 +2,6 @@
   <div class="user-page">
     <div class="news-view">
       <div class="news-list-nav">
-        <el-table
-          class="user"
-          :fit="true"
-          :data="tableData"
-          :default-sort="{prop: 'publish_time', order: 'descending'}"
-          @sort-change="sortChange"
-        >
-          <!-- <template slot="empty">
-          ss
-        </template> -->
-          <el-table-column
-            prop="publish_time"
-            label="时间"
-            sortable="custom"
-            :sort-orders="['descending','ascending', null]"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="retweet_num"
-            label="转发"
-            sortable="custom"
-            :sort-orders="['descending','ascending', null]"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="up_num"
-            label="点赞"
-            sortable="custom"
-            :sort-orders="['descending','ascending', null]"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="comment_num"
-            label="评论"
-            sortable="custom"
-            :sort-orders="['descending','ascending', null]"
-          >
-          </el-table-column>
-        </el-table>
         <div class="block">
           <el-input
             v-model="input"
@@ -51,7 +12,48 @@
             @input="inputChange"
           >
           </el-input>
+          <el-table
+            class="user"
+            style="max-width:500px"
+            :fit="false"
+            :data="tableData"
+            :default-sort="{prop: 'publish_time', order: 'descending'}"
+            @sort-change="sortChange"
+          >
+            <!-- <template slot="empty">
+          ss
+        </template> -->
+            <el-table-column
+              prop="publish_time"
+              label="时间"
+              sortable="custom"
+              :sort-orders="['descending','ascending', null]"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="retweet_num"
+              label="转发"
+              sortable="custom"
+              :sort-orders="['descending','ascending', null]"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="up_num"
+              label="点赞"
+              sortable="custom"
+              :sort-orders="['descending','ascending', null]"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="comment_num"
+              label="评论"
+              sortable="custom"
+              :sort-orders="['descending','ascending', null]"
+            >
+            </el-table-column>
+          </el-table>
           <el-pagination
+            small
             layout="prev, sizes,pager, next,jumper"
             :total="total"
             :page-sizes="[10, 20, 30, 40]"
@@ -187,6 +189,7 @@ export default {
   },
 
   async beforeMount() {
+    this.currentPage = this.page;
     console.log(this.size);
     console.log(this.page);
     if (this.user_id) this.user = (await findUserById(this.user_id)).data;
@@ -203,7 +206,6 @@ export default {
   methods: {
     async fetchWeibo() {
       console.log(this.page);
-      this.currentPage = this.page;
       console.log(this.size);
       const { sort, order } = this.$route.query;
       const { list, total } = (await fetchWeibo(

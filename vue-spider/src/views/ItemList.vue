@@ -2,35 +2,6 @@
   <div class="item-list">
     <div class="news-view">
       <div class="news-list-nav">
-        <el-table
-          class="user"
-          :fit="true"
-          :data="tableData"
-          @sort-change="sortChange"
-        >
-          <!-- <template slot="empty">
-          _id: "5e5b81debb0873db51666122"
-id: "5687069307"
-nickname: "ETF拯救世界"
-weibo_num: 8019
-following: 262
-followers: 338100
-        </template> -->
-          <el-table-column
-            prop="followers"
-            label="粉丝"
-            sortable="custom"
-            :sort-orders="['descending','ascending', null]"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="weibo_num"
-            label="微博"
-            sortable="custom"
-            :sort-orders="['descending','ascending', null]"
-          >
-          </el-table-column>
-        </el-table>
         <div class="block">
           <el-input
             v-model="input"
@@ -41,6 +12,36 @@ followers: 338100
             @input="inputChange"
           >
           </el-input>
+          <el-table
+            class="user"
+            style="max-width:500px"
+            :fit="false"
+            :data="tableData"
+            @sort-change="sortChange"
+          >
+            <!-- <template slot="empty">
+          _id: "5e5b81debb0873db51666122"
+id: "5687069307"
+nickname: "ETF拯救世界"
+weibo_num: 8019
+following: 262
+followers: 338100
+        </template> -->
+            <el-table-column
+              prop="followers"
+              label="粉丝"
+              sortable="custom"
+              :sort-orders="['descending','ascending', null]"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="weibo_num"
+              label="微博"
+              sortable="custom"
+              :sort-orders="['descending','ascending', null]"
+            >
+            </el-table-column>
+          </el-table>
           <el-pagination
             layout="prev, sizes,pager, next,jumper"
             :total="total"
@@ -157,6 +158,7 @@ export default {
   },
 
   async beforeMount() {
+    this.currentPage = this.page;
     await this.fetchPeople();
 
 
@@ -168,7 +170,7 @@ export default {
   methods: {
     async fetchPeople() {
       console.log(this.page);
-      this.currentPage = this.page;
+
       const { sort, order } = this.$route.query;
       const { list, total } = (await fetchPeople(
         {
