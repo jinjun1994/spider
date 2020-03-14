@@ -5,8 +5,8 @@ const day = require('dayjs');
 const utc = require('dayjs/plugin/utc')
 day.extend(utc)
 // day().utcOffset(8) 
-// const axiosInstance = axios.create({ baseURL: "http://127.0.0.1:7001" });
-const axiosInstance = axios.create({ baseURL: "https://jizhi.jinjun.wiki/api" });
+const axiosInstance = axios.create({ baseURL: "http://127.0.0.1:7001" });
+// const axiosInstance = axios.create({ baseURL: "https://jizhi.jinjun.wiki/api" });
 axiosInstance.defaults.headers.Cookie = "csrfToken=TBGV4KxSTGN9mwe263tvl6ZY"; // attach cookie to axiosInstance for future requests
 axiosInstance.defaults.headers["x-csrf-token"] = "TBGV4KxSTGN9mwe263tvl6ZY"; // attach cookie to axiosInstance for future requests
 // https://github.com/eggjs/egg/issues/3050#issuecomment-429039813

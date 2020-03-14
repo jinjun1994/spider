@@ -39,7 +39,7 @@ async function main(where,regexp,cookie,time){
       '-s','2010-01-01',
       '-c',cookie,
       '-u',userListFile,
-    '-m','mongodb://jinjun:jj044019@149.248.5.21/admin'
+    // '-m','mongodb://jinjun:jj044019@149.248.5.21/admin'
   ]
    });
  
