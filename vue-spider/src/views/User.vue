@@ -12,46 +12,55 @@
             @input="inputChange"
           >
           </el-input>
-          <el-table
-            class="user"
-            style="max-width:500px"
-            :fit="false"
-            :data="tableData"
-            :default-sort="{prop: 'publish_time', order: 'descending'}"
-            @sort-change="sortChange"
-          >
-            <!-- <template slot="empty">
+          <div class="search">
+            <el-table
+              class="user"
+              style="max-width:500px"
+              :fit="false"
+              :data="tableData"
+              :default-sort="{prop: 'publish_time', order: 'descending'}"
+              @sort-change="sortChange"
+            >
+              <!-- <template slot="empty">
           ss
         </template> -->
-            <el-table-column
-              prop="publish_time"
-              label="时间"
-              sortable="custom"
-              :sort-orders="['descending','ascending', null]"
+
+              <el-table-column
+                prop="publish_time"
+                label="时间"
+                sortable="custom"
+                :sort-orders="['descending','ascending', null]"
+              >
+              </el-table-column>
+              <el-table-column
+                prop="retweet_num"
+                label="转发"
+                sortable="custom"
+                :sort-orders="['descending','ascending', null]"
+              >
+              </el-table-column>
+              <el-table-column
+                prop="up_num"
+                label="点赞"
+                sortable="custom"
+                :sort-orders="['descending','ascending', null]"
+              >
+              </el-table-column>
+              <el-table-column
+                prop="comment_num"
+                label="评论"
+                sortable="custom"
+                :sort-orders="['descending','ascending', null]"
+              >
+              </el-table-column>
+            </el-table>
+            <el-checkbox
+              v-model="original"
+              @change="originalChange"
             >
-            </el-table-column>
-            <el-table-column
-              prop="retweet_num"
-              label="转发"
-              sortable="custom"
-              :sort-orders="['descending','ascending', null]"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="up_num"
-              label="点赞"
-              sortable="custom"
-              :sort-orders="['descending','ascending', null]"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="comment_num"
-              label="评论"
-              sortable="custom"
-              :sort-orders="['descending','ascending', null]"
-            >
-            </el-table-column>
-          </el-table>
+              原创
+            </el-checkbox>
+          </div>
           <el-pagination
             small
             layout="prev, sizes,pager, next,jumper"
@@ -131,7 +140,8 @@ export default {
       user: {},
       tableData: [],
       input: '',
-      currentPage: 1
+      currentPage: 1,
+      original: false
     };
   },
 
@@ -154,6 +164,10 @@ export default {
     },
     content() {
       return this.$route.query.content;
+    },
+    isOriginal() {
+      // console.log(this.$route.query.original === true, this.$route.query.original);
+      return this.$route.query.original;
     },
     name() {
       return this.$route.name;
@@ -182,6 +196,10 @@ export default {
     async content(to, from) {
       await this.fetchWeibo();
     },
+    async isOriginal(to, from) {
+      console.log(this.isOriginal);
+      await this.fetchWeibo();
+    },
     async name(to, from) {
       if (this.user_id) this.user = (await findUserById(this.user_id)).data;
       await this.fetchWeibo();
@@ -190,6 +208,10 @@ export default {
 
   async beforeMount() {
     this.currentPage = this.page;
+    this.input = this.content ? this.content : '';
+    const { original } = this.$route.query;
+    this.original = !!original;
+    console.log(this.isOriginal);
     console.log(this.size);
     console.log(this.page);
     if (this.user_id) this.user = (await findUserById(this.user_id)).data;
@@ -207,7 +229,7 @@ export default {
     async fetchWeibo() {
       console.log(this.page);
       console.log(this.size);
-      const { sort, order } = this.$route.query;
+      const { sort, order, original } = this.$route.query;
       const { list, total } = (await fetchWeibo(
         {
           total: true,
@@ -216,7 +238,8 @@ export default {
           ...(this.user_id ? { user_id: this.user_id } : {}),
           ...(this.content ? { content: this.content } : {}),
           ...(sort ? { sort } : {}),
-          ...(order ? { order } : {})
+          ...(order ? { order } : {}),
+          ...(original ? { original } : {})
         }
       )).data;
       this.weibos = list;
@@ -259,8 +282,12 @@ export default {
         sort = 'publish_time';
         order = '-1';
       }
+      const { content, original } = this.$route.query;
       this.$router.push({
-        query: { page: this.page, size: this.size, sort, order }
+        query: { page: this.page, size: this.size,
+          ...(content ? { content } : {}),
+          ...(original ? { original: true } : {}),
+          sort, order }
       }).catch(err => {});
       // if (prop === 'publish_time') {
       //   this.$router.push({
@@ -273,7 +300,21 @@ export default {
       //   }).catch(err => {});
       // }
 
-    }
+    },
+    originalChange(original) {
+      const { sort, order } = this.$route.query;
+      this.$router.push({
+        query: {
+          page: this.page,
+          size: this.size,
+          ...(sort ? { sort } : {}),
+          ...(order ? { order } : {}),
+          ...(this.content ? { content: this.content } : {}),
+          ...(original ? { original } : {}),
+        }
+      }).catch(err => {});
+
+    },
   }
 };
 </script>
@@ -296,6 +337,14 @@ export default {
     right 0
     z-index 998
     box-shadow 0 1px 2px rgba(0,0,0,.1)
+    .block
+      display flex
+      flex-direction column
+      justify-content center
+      align-items center
+      .search
+        display flex
+        align-items center
     a
       margin 0 1em
     .disabled
