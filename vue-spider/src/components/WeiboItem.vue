@@ -32,7 +32,7 @@
       </template> -->
 
       <template
-        v-if="item.original_pictures!=='无'"
+        v-if="item.retweet_pictures&&item.original_pictures!=='无'"
       >
         <!-- <img
           v-for="img in item.original_pictures.split(',')"
@@ -52,7 +52,7 @@
         </el-image>
       </template>
       <template
-        v-if="item.retweet_pictures!=='无'"
+        v-if="item.retweet_pictures&&item.retweet_pictures!=='无'"
       >
         <!-- <img
           v-for="img in item.retweet_pictures.split(',')"
@@ -96,7 +96,7 @@
         {{ item.publish_tool }}
         {{ new Date(item.publish_time).toLocaleString() }}
         {{ item.publish_place==='无'?"":item.publish_place }}
-
+        <!-- v-if="$route.name!=='User'" -->
         <a
           v-if="$route.name!=='User'"
           style="cursor: pointer;"
