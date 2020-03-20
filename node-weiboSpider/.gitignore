@@ -105,3 +105,4 @@ dist
 
 weiboSpider/weibo/*
 weiboSpider/user/*
+db/*

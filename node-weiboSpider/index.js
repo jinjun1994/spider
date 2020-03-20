@@ -36,7 +36,7 @@ async function main(where,regexp,cookie,time){
     // message 模式
    //  args:['-i','2492465520','-i',"2201566133",'-c',cookie]
     args:[
-      '-s','2010-01-01',
+      '-s','2009-01-01',
       '-c',cookie,
       '-u',userListFile,
     // '-m','mongodb://jinjun:jj044019@149.248.5.21/admin'
