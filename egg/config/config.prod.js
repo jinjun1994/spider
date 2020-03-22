@@ -13,8 +13,8 @@ module.exports = appInfo => {
   const config = exports = {
 
     mongoose: {
-      url: process.env.SPIDER_MONGODB || 'mongodb://127.0.0.1/weibo',
-      // url: 'mongodb://localhost/weibo',
+      // url: process.env.SPIDER_MONGODB || 'mongodb://127.0.0.1/weibo',
+      url: 'mongodb://localhost/weibo',
       options: {
         // auth: { authSource: 'admin' },
         // user: process.env.SPIDER_MONGODB_USER,
