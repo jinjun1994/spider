@@ -20,21 +20,23 @@ steps:
     npm install
     npm run build
     cd ../egg
-    npm install
+    npm install --production
+    tar -zcvf egg.tar.gz egg
+    tar -zcvf spider.tar.gz vue-spider/spider
   displayName: 'npm install and build'
 - task: CopyFilesOverSSH@0
   inputs:
     sshEndpoint: '149.248.5.21'
-    sourceFolder: 'vue-spider/spider'
+    sourceFolder: 'spider.tar.gz'
     contents: '**'
-    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/spider'
+    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/spider.tar.gz'
     readyTimeout: '20000'
 - task: CopyFilesOverSSH@0
   inputs:
     sshEndpoint: '149.248.5.21'
-    sourceFolder: 'egg'
+    sourceFolder: 'egg.tar.gz'
     contents: '**'
-    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/egg'
+    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/egg.tar.gz'
     readyTimeout: '20000'
 
 - task: SSH@0
@@ -42,6 +44,8 @@ steps:
     sshEndpoint: '149.248.5.21'
     runOptions: 'inline'
     inline: |
+      tar -zxvf spider.tar.gz
+      tar -zxvf egg.tar.gz
       cd /home/wwwroot/jizhi.jinjun.wiki/egg
       npm stop 
       npm start
