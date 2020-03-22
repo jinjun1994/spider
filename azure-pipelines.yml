@@ -36,3 +36,13 @@ steps:
     contents: '**'
     targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/egg'
     readyTimeout: '20000'
+
+- task: SSH@0
+  inputs:
+    sshEndpoint: '149.248.5.21'
+    runOptions: 'inline'
+    inline: |
+      cd /home/wwwroot/jizhi.jinjun.wiki/egg
+      npm stop 
+      npm start
+    readyTimeout: '20000'
