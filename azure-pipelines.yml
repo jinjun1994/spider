@@ -12,7 +12,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '13.10.1'
   displayName: 'Install Node.js'
 
 - script: |
@@ -44,7 +44,7 @@ steps:
       cd /home/wwwroot/jizhi.jinjun.wiki/cpl
       tar -zxvf spider.tar.gz
       tar -zxvf egg.tar.gz
-      cp spider ../
+      cp vue-spider/spider ../
       cd egg
       npm stop 
       npm start
