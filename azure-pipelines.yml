@@ -44,7 +44,7 @@ steps:
       cd /home/wwwroot/jizhi.jinjun.wiki/cpl
       tar -zxvf spider.tar.gz
       tar -zxvf egg.tar.gz
-      cp vue-spider/spider ../
+      cp -r vue-spider/spider ../
       cd egg
       npm stop 
       npm start
