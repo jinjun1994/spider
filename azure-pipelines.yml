@@ -22,8 +22,8 @@ steps:
   displayName: 'npm install and build'
 - task: CopyFilesOverSSH@0
   inputs:
+    sshEndpoint: '149.248.5.21'
     sourceFolder: 'spider'
     contents: '**'
     targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/spider'
-    cleanTargetFolder: true
     readyTimeout: '20000'
