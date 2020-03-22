@@ -24,20 +24,16 @@ steps:
     cd ..
     tar -zcvf egg.tar.gz egg
     tar -zcvf spider.tar.gz vue-spider/spider
+    mkdir cpl
+    cp egg.tar.gz cpl
+    cp spider.tar.gz cpl
   displayName: 'npm install and build'
 - task: CopyFilesOverSSH@0
   inputs:
     sshEndpoint: '149.248.5.21'
-    sourceFolder: 'spider.tar.gz'
+    sourceFolder: 'cpl'
     contents: '**'
-    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/spider.tar.gz'
-    readyTimeout: '20000'
-- task: CopyFilesOverSSH@0
-  inputs:
-    sshEndpoint: '149.248.5.21'
-    sourceFolder: 'egg.tar.gz'
-    contents: '**'
-    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/egg.tar.gz'
+    targetFolder: '/home/wwwroot/jizhi.jinjun.wiki/cpl'
     readyTimeout: '20000'
 
 - task: SSH@0
@@ -45,9 +41,11 @@ steps:
     sshEndpoint: '149.248.5.21'
     runOptions: 'inline'
     inline: |
+      cd /home/wwwroot/jizhi.jinjun.wiki/cpl
       tar -zxvf spider.tar.gz
       tar -zxvf egg.tar.gz
-      cd /home/wwwroot/jizhi.jinjun.wiki/egg
+      cp spider ../
+      cd egg
       npm stop 
       npm start
     readyTimeout: '20000'
