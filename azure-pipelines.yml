@@ -21,6 +21,7 @@ steps:
     npm run build
     cd ../egg
     npm install --production
+    cd ..
     tar -zcvf egg.tar.gz egg
     tar -zcvf spider.tar.gz vue-spider/spider
   displayName: 'npm install and build'
