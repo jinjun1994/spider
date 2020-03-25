@@ -36,12 +36,12 @@
           style="margin: 0 0.5em"
           :href="`/weibos/${item.nickname}/${item.id}.csv`"
           :download="`${item.nickname}.csv`"
-        >  excel格式</a>
+        >  excel格式</template>
         <a
           style="margin: 0 0.5em"
           :href="`/weibos/${item.nickname}/${item.id}.txt`"
           :download="`${item.nickname}.txt`"
-        >  text格式</a>
+        >  text格式</template>
         <a
           style="margin: 0 0.5em"
           :href="`/weibos/${item.nickname}/${item.id}.json`"
