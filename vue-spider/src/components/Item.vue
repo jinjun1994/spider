@@ -34,18 +34,18 @@
         微博合集下载：
         <a
           style="margin: 0 0.5em"
-          :href="`https://jizhi.jinjun.wiki/weibos/${item.nickname}/${item.id}.csv`"
+          :href="`/weibos/${item.nickname}/${item.id}.csv`"
           :download="`${item.nickname}.csv`"
         >  excel格式</a>
         <a
           style="margin: 0 0.5em"
-          :href="`https://jizhi.jinjun.wiki/weibos/${item.nickname}/${item.id}.txt`"
+          :href="`/weibos/${item.nickname}/${item.id}.txt`"
           :download="`${item.nickname}.txt`"
         >  text格式</a>
         <a
           style="margin: 0 0.5em"
-          :href="`https://jizhi.jinjun.wiki/weibos/${item.nickname}/${item.id}.json`"
-          :download="`${item.nickname}.txt`"
+          :href="`/weibos/${item.nickname}/${item.id}.json`"
+          :download="`${item.nickname}.json`"
         >  json格式</a>
       </div>
       <div class="host">
