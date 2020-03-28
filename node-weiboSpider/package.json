@@ -12,6 +12,9 @@
   "dependencies": {
     "axios": "^0.19.2",
     "dayjs": "^1.8.21",
+    "imagemin": "^7.0.1",
+    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-pngquant": "^8.0.0",
     "node-notifier": "^6.0.0",
     "python-shell": "^1.0.8",
     "shelljs": "^0.8.3"
