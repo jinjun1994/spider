@@ -48,6 +48,12 @@ module.exports = {
             '^/api': '/'
           }
         },
+        '/weibos': {
+          target: 'http://localhost:9990/',
+          // pathRewrite: {
+          //   '^/api': '/'
+          // }
+        },
       }
   },
 };

@@ -27,6 +27,23 @@
       <div class="host">
         粉丝：{{ item.followers }}
       </div>
+      <div
+        v-if="page===1&&user_id"
+        class="host"
+      >
+        <el-image
+          v-if="item.nickname"
+          :src="`/weibos/${item.nickname}/${item.id}.csv.png`"
+          class="image"
+          :preview-src-list="[`/weibos/${item.nickname}/${item.id}.csv.png`]"
+        >
+        </el-image>
+        <!-- <img
+          :src="`/weibos/${item.nickname}/${item.id}.csv.png`"
+          class="image"
+          referrer-policy="no-referrer"
+        /> -->
+      </div>
       <div class="host">
         上次抓取 {{ new Date(item.time).toLocaleString() }}
       </div>
@@ -36,19 +53,17 @@
           style="margin: 0 0.5em"
           :href="`/weibos/${item.nickname}/${item.id}.csv`"
           :download="`${item.nickname}.csv`"
-        >  excel格式</template>
+        >  excel格式</a>
         <a
           style="margin: 0 0.5em"
           :href="`/weibos/${item.nickname}/${item.id}.txt`"
           :download="`${item.nickname}.txt`"
-        >  text格式</template>
+        >  text格式</a>
         <a
           style="margin: 0 0.5em"
           :href="`/weibos/${item.nickname}/${item.id}.json`"
           :download="`${item.nickname}.json`"
         >  json格式</a>
-      </div>
-      <div class="host">
       </div>
     </el-card>
   </div>
@@ -66,6 +81,16 @@ export default {
         return {};
       }
     },
+  },
+  computed: {
+    page() {
+      return Number(this.$route.query.page) || 1;
+    },
+
+    user_id() {
+      return this.$route.params.user_id;
+    },
+
   },
   // http://ssr.vuejs.org/en/caching.html#component-level-caching
 
