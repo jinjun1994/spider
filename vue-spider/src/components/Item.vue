@@ -33,9 +33,9 @@
       >
         <el-image
           v-if="item.nickname"
-          :src="`/weibos/${item.nickname}/min/${item.id}.csv.png`"
+          :src="`/weibos/${item.nickname}/${item.id}.csv.png`"
           class="image"
-          :preview-src-list="[`/weibos/${item.nickname}/min/${item.id}.csv.png`]"
+          :preview-src-list="[`/weibos/${item.nickname}/${item.id}.csv.png`]"
         >
         </el-image>
         <!-- <img

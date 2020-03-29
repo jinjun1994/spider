@@ -1,11 +1,13 @@
-import Vue from 'vue';
+// /* global Vue mapboxgl */
+// import Vue from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
 import store from './store';
 import ProgressBar from './components/ProgressBar.vue';
-import './plugins/element.js';
+// import './plugins/element.js';
 import merge from 'webpack-merge';
+const Vue = window.Vue;
 Vue.prototype.merge = merge;
 Vue.config.errorHandler = function(err, vm, info) {
   // axios 出错信息
