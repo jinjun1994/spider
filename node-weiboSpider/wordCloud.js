@@ -4,6 +4,7 @@ const notifier = require('node-notifier');
 
 const imageMin = require('./imageMin');
 
+
 let index = 0
 function main (time){
   
@@ -25,7 +26,9 @@ console.log(path);
 
     makeImg(path)
 
- 
+    (async ()=>{
+      await   imageMin.CompressAll()
+    })()
 setTimeout(main, time,time);
 
 }
@@ -49,7 +52,7 @@ function makeImg(path){
     
       spider.on('close', async function (close) {
         console.log(close,'close');
-        await   imageMin.Compress(path[index])
+        // await   imageMin.Compress(path[index])
         index++
         if (index>path.length-1){
             index =0
