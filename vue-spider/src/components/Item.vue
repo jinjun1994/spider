@@ -33,9 +33,9 @@
       >
         <el-image
           v-if="item.nickname"
-          :src="`/weibos/${item.nickname}/${item.id}.csv.png`"
+          :src="`${ossurl}/weibos/${item.nickname}/${item.id}.csv.png`"
           class="image"
-          :preview-src-list="[`/weibos/${item.nickname}/${item.id}.csv.png`]"
+          :preview-src-list="[`${ossurl}/weibos/${item.nickname}/${item.id}.csv.png`]"
         >
         </el-image>
         <!-- <img
@@ -51,17 +51,17 @@
         微博合集下载：
         <a
           style="margin: 0 0.5em"
-          :href="`/weibos/${item.nickname}/${item.id}.csv`"
+          :href="`${ossurl}/weibos/${item.nickname}/${item.id}.csv`"
           :download="`${item.nickname}.csv`"
         >  excel格式</a>
         <a
           style="margin: 0 0.5em"
-          :href="`/weibos/${item.nickname}/${item.id}.txt`"
+          :href="`${ossurl}/weibos/${item.nickname}/${item.id}.txt`"
           :download="`${item.nickname}.txt`"
         >  text格式</a>
         <a
           style="margin: 0 0.5em"
-          :href="`/weibos/${item.nickname}/${item.id}.json`"
+          :href="`${ossurl}/weibos/${item.nickname}/${item.id}.json`"
           :download="`${item.nickname}.json`"
         >  json格式</a>
       </div>
