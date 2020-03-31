@@ -27,7 +27,26 @@ const imageminPngquant = require('imagemin-pngquant');
         try {
             const imagePath=path+".png"
         const files = await imagemin([imagePath], {
-            destination: imagePath.split("/").slice(0,3).join("/")+"/min",
+            destination: imagePath.split("/").slice(0,3).join("/")+"/min.png",
+            plugins: [
+                imageminJpegtran(),
+                imageminPngquant({
+                    quality: [0.6, 0.8]
+                })
+            ]
+        });
+    
+        console.log(files);
+        //=> [{data: <Buffer 89 50 4e …>, destinationPath: 'build/images/foo.jpg'}, …]
+    } catch (error) {
+        console.log(error);
+    }
+        },
+      async  CompressAll (path){
+        try {
+            const imagePath=path+".png"
+        const files = await imagemin(["weiboSpider/weibo/**/*csv.{jpg,png}"], {
+            destination: "weiboSpider/weibo/images",
             plugins: [
                 imageminJpegtran(),
                 imageminPngquant({
