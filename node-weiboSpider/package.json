@@ -16,7 +16,9 @@
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^6.0.0",
     "imagemin-pngquant": "^8.0.0",
+    "jsonfile": "^6.0.1",
     "node-notifier": "^6.0.0",
+    "pdfkit": "^0.11.0",
     "python-shell": "^1.0.8",
     "shelljs": "^0.8.3"
   },
