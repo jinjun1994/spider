@@ -2,7 +2,6 @@ const path = require('path');
 const CompressionPlugin = require('compression-webpack-plugin');
 const productionGzipExtensions = ['js', 'css']
 const WebpackAliossPlugin = require('webpack-alioss-plugin');
-const configs = require('./config');
 const isProduction = process.env.NODE_ENV === 'production';
 const cdn = {
   css: [

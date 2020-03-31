@@ -1,5 +1,6 @@
 // /* global Vue mapboxgl */
 // import Vue from 'vue';
+
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
@@ -9,6 +10,8 @@ import ProgressBar from './components/ProgressBar.vue';
 import merge from 'webpack-merge';
 const Vue = window.Vue;
 Vue.prototype.merge = merge;
+// eslint-disable-next-line
+Vue.prototype.ossurl = "https://jinjun1994.oss-cn-hangzhou.aliyuncs.com";
 Vue.config.errorHandler = function(err, vm, info) {
   // axios 出错信息
   const message = err.response && err.response.data.error;
