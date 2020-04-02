@@ -1,6 +1,10 @@
 <template>
-  <div class="news-item">
-    <el-card class="box-card">
+  <div
+    class="news-item"
+  >
+    <el-card
+      class="box-card"
+    >
       <div
         slot="header"
         class="clearfix"
@@ -14,6 +18,17 @@
           class="score"
           @click="$router.push({path:`/user/${item.id}`}).catch(err=>{})"
         > {{ item.weibo_num }}</span>
+
+        <section
+          v-if="!user_id"
+          class="hand"
+        >
+          <i
+            class="fa fa-hand-o-left"
+          ></i>
+          <span>点击查看微博</span>
+        </section>
+
         <!-- <el-button
           style="float: right; padding: 3px 0"
           type="text"
@@ -30,7 +45,9 @@
       <div
         v-if="page===1&&user_id"
         class="host"
+        @click.stop="1"
       >
+        微博词云：
         <el-image
           v-if="item.nickname"
           :src="`${ossurl}/weibos/${item.nickname}/${item.id}.csv.png`"
@@ -51,19 +68,34 @@
         微博合集下载：
         <a
           style="margin: 0 0.5em"
+          target="_blank"
           :href="`${ossurl}/weibos/${item.nickname}/${item.id}.csv`"
           :download="`${item.nickname}.csv`"
         >  excel格式</a>
         <a
           style="margin: 0 0.5em"
+          target="_blank"
           :href="`${ossurl}/weibos/${item.nickname}/${item.id}.txt`"
           :download="`${item.nickname}.txt`"
         >  text格式</a>
         <a
           style="margin: 0 0.5em"
+          target="_blank"
           :href="`${ossurl}/weibos/${item.nickname}/${item.id}.json`"
           :download="`${item.nickname}.json`"
         >  json格式</a>
+        <a
+          style="margin: 0 0.5em"
+          target="_blank"
+          :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集time.pdf`"
+          :download="`${item.nickname}time.pdf`"
+        >  pdf格式(时间排序)</a>
+        <a
+          style="margin: 0 0.5em"
+          target="_blank"
+          :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集number.pdf`"
+          :download="`${item.nickname}number.pdf`"
+        >  pdf格式(热度排序)</a>
       </div>
     </el-card>
   </div>
@@ -102,6 +134,13 @@ export default {
   background-color #fff
   line-height 20px
   padding 20px 30px 20px 30px
+  .box-card:hover
+      .hand
+        display:inline-block!important;
+        margin-left 0.51em
+  .hand
+     display none
+     color  #f60
   .score
     color #ff6600
     padding-left 10px
