@@ -19,7 +19,26 @@ class WeiboController extends Controller {
         ...(video_url ? { video_url: { $ne: null } } : {}),
       };
 
-      ctx.body = await ctx.service.crud.index(ctx.service.weibo, options);
+      ctx.body = {
+        ...await ctx.service.crud.index(ctx.service.weibo, options),
+      };
+    } catch (err) {
+      ctx.logger.warn(err);
+      throw err;
+    }
+  }
+  async analyze(ctx) {
+    try {
+      const user_id = ctx.params.id;
+
+      const options = {
+        ...(user_id ? { user_id } : {}),
+      };
+
+      ctx.body = {
+        ...(user_id ? { analyze: await ctx.service.weibo.analyze({ user_id }) } : {}),
+
+      };
     } catch (err) {
       ctx.logger.warn(err);
       throw err;

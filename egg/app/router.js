@@ -11,5 +11,6 @@ module.exports = app => {
   router.post('/user/submit', controller.user.submit);
   router.post('/user/bulkWrite', controller.user.bulkWrite);
   router.get('/user/:id', controller.user.findById);
+  router.get('/weibo/analyze/:id', controller.weibo.analyze);
   router.get('/weibo', controller.weibo.index);
 };
