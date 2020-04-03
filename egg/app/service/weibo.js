@@ -42,53 +42,16 @@ class WeiboService extends Service {
   async analyze({ user_id } = {}) {
     // user_id = this.service.crud.objectId(user_id);
     const types = [ 'year', 'month', 'hour', 'dayOfWeek', 'dayOfMonth' ];
-    const promiseArr = [];
-    for (const type of types) {
-      promiseArr.push(
-        new Promise((resolve, reject) => {
-          this.analyzeByTime({ user_id, type })
-            .then(r => resolve(r))
-            .catch(e => reject(e));
-        }),
-      );
-      // result[type] = await this.analyzeByTime({ user_id, type });
-    }
-    // types.push('monthly');
-    // promiseArr.push(
-    //   new Promise((resolve, reject) => {
-    //     this.analyzeByMonth({ user_id })
-    //       .then(r => resolve(r))
-    //       .catch(e => reject(e));
-    //   }),
-    // );
-    const promiseResult = await allSettled(promiseArr);
-    const result = {};
-    for (const [ i, v ] of Object.entries(promiseResult)) {
-      const { status, value } = v;
-      console.log(value);
-      result[types[i]] = status === 'fulfilled' ? value : [];
-    }
-    result.monthly = await this.analyzeByMonth({ user_id });
-    return result;
-    // return { month: await this.analyzeByTime({ user_id, type: 'month' }) };
+    return (await this.analyzeByTime({ user_id, types }))[0];
   }
-  async analyzeByTime({ user_id, type } = {}) {
-    return await this.app.model.Weibo.aggregate([
-      {
-        $match: {
-          user_id,
-          publish_time: {
-            $ne: null,
-          },
-        },
-      },
-      // { $project: {
-      //   _id: 0,
-      //   publish_time: IOSDate('$publish_time'),
-      //   gender: '$gender',
-      // }
-      // },
-      { $group: {
+  async analyzeByTime({ user_id, types } = {}) {
+
+    const $facet = {
+
+    };
+
+    for (const type of types) {
+      $facet[type] = [{ $group: {
         _id: {
           [`$${type}`]: { $toDate: '$publish_time' },
         },
@@ -101,10 +64,24 @@ class WeiboService extends Service {
         sum: '$sum',
       }
       },
-      { $sort: { _id: 1 } },
-    ]);
-  }
-  async analyzeByMonth({ user_id } = {}) {
+      { $sort: { _id: 1 } }];
+    }
+    $facet.monthly = [{ $group: {
+      _id: {
+        // $substr: [{ $add: [ '$created_at', 28800000 ] }, 0, 10 ]
+        $substr: [ '$publish_time', 0, 7 ]
+      },
+      sum: { $sum: 1 },
+    },
+    },
+    { $project: {
+      _id: 0,
+      monthly: '$_id',
+      sum: '$sum',
+    }
+    },
+    { $sort: { _id: 1 } }];
+    console.log($facet);
     return await this.app.model.Weibo.aggregate([
       {
         $match: {
@@ -113,22 +90,16 @@ class WeiboService extends Service {
             $ne: null,
           },
         },
+
       },
-      { $group: {
-        _id: {
-          // $substr: [{ $add: [ '$created_at', 28800000 ] }, 0, 10 ]
-          $substr: [ '$publish_time', 0, 7 ]
-        },
-        sum: { $sum: 1 },
-      },
-      },
-      { $project: {
-        _id: 0,
-        month: '$_id',
-        sum: '$sum',
-      }
-      },
-      { $sort: { _id: 1 } },
+      { $facet }
+      // { $project: {
+      //   _id: 0,
+      //   publish_time: IOSDate('$publish_time'),
+      //   gender: '$gender',
+      // }
+      // },
+
     ]);
   }
 
