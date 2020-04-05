@@ -17,7 +17,8 @@ const cdn = {
     "https://cdn.bootcss.com/axios/0.19.2/axios.min.js",
     // element-ui js
     // "https://unpkg.com/element-ui/lib/index.js"
-    "https://cdn.bootcss.com/element-ui/2.13.0/index.js"
+    "https://cdn.bootcss.com/element-ui/2.13.0/index.js",
+    "https://gw.alipayobjects.com/os/lib/antv/g2/4.0.3/dist/g2.min.js"
 
   ]
 }
@@ -27,6 +28,7 @@ const externals = {
   'element-ui': 'ELEMENT',
   'vue-router': 'VueRouter',
   'axios': 'axios',
+  '@antv/g2':"G2"
 };
 module.exports = {
   // publicPath: 'spider',

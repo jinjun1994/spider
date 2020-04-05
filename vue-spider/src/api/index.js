@@ -32,3 +32,7 @@ export async function submit(url) {
   const list = await axios.post('/api/user/submit', { url });
   return list;
 }
+export async function analyze({ user_id } = {}) {
+  const list = await axios.get('/api/weibo/analyze/' + user_id, { user_id });
+  return list;
+}

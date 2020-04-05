@@ -60,6 +60,27 @@
           class="image"
           referrer-policy="no-referrer"
         /> -->
+        <el-row>
+          <template
+            v-for="type in types"
+          >
+            <el-col
+              :key="type.type"
+              :span="24"
+              class="chart"
+              :style="{width:type.type==='monthly'?'100%':'50%'}"
+            >
+              <div
+                :id="type.type"
+              >
+              </div>
+              <span
+                :key="type.type"
+                style="text-align:center;width:100%;display: block;"
+              >{{ `${item.nickname}微博数量${type.title}统计` }}</span>
+            </el-col>
+          </template>
+        </el-row>
       </div>
       <div class="host">
         上次抓取 {{ new Date(item.time).toLocaleString() }}
@@ -102,8 +123,10 @@
 </template>
 
 <script>
+/* global G2 mapboxgl */
 import { timeAgo } from '../util/filters';
-
+import { analyze } from '../api';
+const dayjs = require('dayjs');
 export default {
   name: 'NewsItem',
   props: {
@@ -113,6 +136,19 @@ export default {
         return {};
       }
     },
+  },
+  data() {
+    return {
+      // analyze: null
+      types: [
+        { type: 'monthly', label: '月', title: '逐月' },
+        { type: 'year', label: '年', title: '年' },
+        { type: 'month', label: '月', title: '月' },
+        { type: 'hour', label: '时', title: '小时' },
+        { type: 'dayOfWeek', label: '周', title: '星期' },
+        { type: 'dayOfMonth', label: '号', title: '日期' },
+      ]
+    };
   },
   computed: {
     page() {
@@ -124,7 +160,70 @@ export default {
     },
 
   },
-  // http://ssr.vuejs.org/en/caching.html#component-level-caching
+  async mounted() {
+    console.log(this.user_id, 'item');
+    if (this.user_id) {
+      this.analyze = (await analyze(
+        { user_id: this.user_id }
+      )).data.analyze;
+      this.analyze.monthly = this.analyze.monthly.sort(
+        (a, b) => dayjs(a.monthly).valueOf() - dayjs(b.monthly).valueOf()
+      );
+      console.log(this.analyze);
+      for (const itme of this.types) {
+        this.drawChart(itme);
+      }
+
+    }
+    this.$nextTick(() => {
+
+    });
+    // this.drawChart();
+  },
+  methods: {
+    drawChart({ type, label } = {}) {
+
+      // Step 1: 创建 Chart 对象
+      const chart = new G2.Chart({
+        container: type, // 指定图表容器 ID
+        // width: 300, // 指定图表宽度
+        height: 350, // 指定图表高度
+        padding: [40, 40, 60],
+        autoFit: true
+      });
+
+      // Step 2: 载入数据源
+      const data = this.analyze[type];
+      console.log(data);
+      chart.data(data);
+
+      // Step 3：创建图形语法，绘制柱状图
+      chart.line().position(`${type}*sum`).label('sum');
+      chart.axis('sum', {
+        label: {
+          formatter: (val) => {
+            return val;
+          },
+        },
+      });
+      chart.axis(`${type}`, {
+        label: {
+          formatter: (val) => {
+            if (type === 'dayOfWeek') {
+
+              return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][val - 1];
+            }
+            return val + ` ${label}`;
+          },
+        },
+      });
+
+      // Step 4: 渲染图表
+      chart.render();
+
+    }
+
+  }
 
 };
 </script>
@@ -141,6 +240,9 @@ export default {
   .hand
      display none
      color  #f60
+  .chart
+     height:400px
+     width:50%
   .score
     color #ff6600
     padding-left 10px
