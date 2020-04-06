@@ -7,13 +7,17 @@ module.exports = {
     immediate: true
   },
   async task(ctx) {
-    const abu = new ABU({
-      ...configs.ossAuth,
-      ossDir: '/weibos/', // 阿里云OSS根目录，默认为'/',
-      pattern: ''
-    });
-    abu.upload('../node-weiboSpider/weiboSpider/weibo/', {
+    if (process.env.NODE_ENV === 'production') {
+
+
+      const abu = new ABU({
+        ...configs.ossAuth,
+        ossDir: '/weibos/', // 阿里云OSS根目录，默认为'/',
+        pattern: ''
+      });
+      abu.upload('../node-weiboSpider/weiboSpider/weibo/', {
       // options
-    });// 上传当前目录
-  },
+      });// 上传当前目录
+    }
+  }
 };
