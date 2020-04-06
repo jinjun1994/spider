@@ -122,7 +122,7 @@ class WechatAccountService extends Service {
       const browser = await puppeteer.launch({
         args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
         headless: false,
-        userDataDir: 'D:/html/puppeteer',
+        userDataDir: './myUserDataDir',
         // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });
       const url = 'https://weread.qq.com/';
