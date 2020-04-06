@@ -24,11 +24,11 @@ for (const item of list) {
 console.log(path);
 
 
-    makeImg(path)
+    makeImg(path);
 
     (async ()=>{
       await   imageMin.CompressAll()
-    })()
+    })();
 setTimeout(main, time,time);
 
 }
@@ -41,7 +41,8 @@ function makeImg(path){
         args:[
     // "weiboSpider/weibo/剪枝者/2201566133.csv"
     // "weiboSpider/weibo/迎十里/6485156633.csv"
-    path[index]
+    "weiboSpider/weibo/顾芷沐/5315308583.csv"
+    // path[index]
       ]
        });
     
@@ -56,6 +57,7 @@ function makeImg(path){
         index++
         if (index>path.length-1){
             index =0
+     
         }else{
             console.log("success run again");
          makeImg(path)
