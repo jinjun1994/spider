@@ -13,4 +13,6 @@ module.exports = app => {
   router.get('/user/:id', controller.user.findById);
   router.get('/weibo/analyze/:id', controller.weibo.analyze);
   router.get('/weibo', controller.weibo.index);
+  router.get('/wechat/account', controller.wechatAccount.index);
+  router.post('/wechat/submit', controller.wechatAccount.submit);
 };
