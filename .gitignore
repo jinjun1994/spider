@@ -104,4 +104,4 @@ dist
 .tern-port
 
 spider/
-config.js
+my_config.js
