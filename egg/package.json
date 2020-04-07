@@ -15,7 +15,9 @@
     "egg-scripts": "^2.11.0",
     "promise.allsettled": "^1.0.2",
     "puppeteer": "^2.1.1",
-    "superagent": "^5.2.2"
+    "redis": "^3.0.2",
+    "superagent": "^5.2.2",
+    "util": "^0.12.2"
   },
   "devDependencies": {
     "autod": "^3.0.1",

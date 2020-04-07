@@ -1,4 +1,13 @@
 'use strict';
+const redis = require('redis');
+const { promisify } = require('util');
+const config = require('../../../config');
+
+const { port = 6379, host = '127.0.0.1' } = config.redis;
+
+const redisClient = redis.createClient(port, host);
+
+
 module.exports = {
   /**
    * 根据 page size sort order 计算 skip limit sort
@@ -42,6 +51,13 @@ module.exports = {
       limit: size,
     };
   },
-
+  asyncRedis(cmd, ...args) {
+    return promisify(redisClient[cmd]).call(redisClient, ...args);
+  },
+  random(min, max) {
+    if (max === min) return max;
+    if (max < min) [ min, max ] = [ max, min ];
+    return Math.round(Math.random() * (max - min) + min);
+  }
 
 };
