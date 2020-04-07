@@ -1,9 +1,11 @@
 'use strict';
-
+/* global location */
 const Service = require('egg').Service;
 const allSettled = require('promise.allsettled');
 const axios = require('axios');
 const puppeteer = require('puppeteer');
+let page;
+let url;
 class WechatAccountService extends Service {
 
   // ////////////////////////数据库或其他外部环境相关调用的封装///////////////////////////
@@ -116,59 +118,69 @@ class WechatAccountService extends Service {
   async findByUsername(username) {
     return await this.app.model.WechatAccount.findOne({ username });
   }
-  async getKeys() {
-
-    try {
-      const browser = await puppeteer.launch({
-        args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
-        headless: false,
-        userDataDir: './myUserDataDir',
+  async getKeysFromCookie(url, page, ctx) {
+    const cookiesSet = await page.cookies(url);
+    const key = (key) => [ ...cookiesSet ].filter(v => v.name === key)[0].value;
+    const skey = key('wr_skey');
+    const vid = key('wr_vid');
+    await ctx.helper.asyncRedis('hmset', 'cookie', 'skey', skey, 'vid', vid);
+  }
+  async refreshCookie(ctx) {
+    if (!process.env.NODE_ENV === 'production') {
+      try {
+        const browser = await puppeteer.launch({
+          args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
+          headless: false,
+          userDataDir: './myUserDataDir',
         // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
-      });
-      const url = 'https://weread.qq.com/';
-      const page = await browser.newPage();
-      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.0 Safari/537.36');
+        });
+        url = 'https://weread.qq.com/';
+        page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.0 Safari/537.36');
 
-      // const cookie = ' pgv_pvid=6082038910; pgv_pvi=9851128832; eas_sid=61o5s8v5P2v231O2x1k6G2t7t5; ptui_loginuin=397043849; RK=UJLVDxLmVG; ptcz=e04d00898ef664d0835588ee49a041b78eab9e15bcb00a33de956f66be9d47ea; o_cookie=397043849; pac_uid=1_397043849; wr_logined=1; wr_avatar=http%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTIL34rMu8CX0rCazKMv2dWoxpib2IibLerNnnzfia0sdxeXfjEgicibKgm6qTzIicMsHyoJIT7BCicPAXzQA%2F132; wr_name=%E9%87%91%E4%BF%8A; wr_gid=234783631; wr_vid=32707621; wr_pf=1; wr_rt=web%40Gz71bHi79QaOi4rUDbo_WL; wr_localvid=7cc325d071f314257cc2a9c; wr_gender=1; wr_skey=XYd01GoA';
-      // const cookieArr = Array.from(cookie.split(';'), (v) => ({
-      //   domain: 'https://weread.qq.com',
-      //   // hostOnly: false,
-      //   // httpOnly: false,
-      //   // secure: false,
-      //   // session: false,
-      //   // path: '/',
-      //   name: v.split('=')[0].trim(),
-      //   value: v.split('=')[1]
-      // }));
-      // console.log(cookieArr);
-      // const client = await page.target().createCDPSession();
-      // await client.send('Network.enable');
-      // // const setCookie = await client.send('Network.setCookie', {
-      // //   name: 'mycookie', value: 'Hello', domain: 'https://example.com'
-      // // });
-      // const setCookie = await client.send('Network.setCookie', ...cookieArr);
-      // console.log('Set Cookie: ' + setCookie.success);
-
-      // await page.setCookie(...cookieArr);
-      await page.goto(url,
+        await page.goto(url,
         // { waitUntil: 'networkidle0' }
-      );
-      const cookiesSet = await page.cookies(url);
+        );
+        await this.getKeysFromCookie(url, page, this.ctx);
+        //   browser.close();
 
-      // console.log([ ...cookiesSet ]);
-      const key = (key) => [ ...cookiesSet ].filter(v => v.name === key)[0].value;
-      const skey = key('wr_skey');
-      const vid = key('wr_vid');
+        //   setInterval(async () => {
+        //     page.waitFor(10000);
+        //     console.log(await ctx.helper.asyncRedis('hmget', 'cookie', 'skey', 'vid'));
 
-      // console.log(skey, vid);
-      browser.close();
+        //   }, 10000);
+        const go = async () => {
+          await page.evaluate(() => {
+            location.reload(true);
+          });
+          await this.getKeysFromCookie(url, page, this.ctx);
+          console.log(await this.ctx.helper.asyncRedis('hmget', 'cookie', 'skey', 'vid'));
+          setTimeout(go, this.ctx.helper.random(1000 * 60 * 20, 1000 * 60 * 30));
+        // setTimeout(go, ctx.helper.random(1000 * 10, 1000 * 15));
+        };
+        await go();
+
+      } catch (error) {
+        console.log(error);
+      }
+
+    }
+  }
+  async refreshPage() {
+    await page.evaluate(() => {
+      location.reload(true);
+    });
+    await this.getKeysFromCookie(url, page, this.ctx);
+  }
+  async getKeys() {
+    try {
+      const { 0: skey, 1: vid } = await this.ctx.helper.asyncRedis('hmget', 'cookie', 'skey', 'vid');
+      console.log(skey, vid);
       return {
         skey, vid
       };
-
-
     } catch (error) {
-      console.log(error);
+      throw error;
     }
 
   }
@@ -179,10 +191,19 @@ class WechatAccountService extends Service {
    * @return {Object} 总数
    */
   async findBookByTitle(title, count = 100) {
-    const result = await axios.get(`https://i.weread.qq.com/store/search?author=&authorVids=&count=${count}&fromBookId=&keyword=${encodeURI(title)}&maxIdx=0&outer=1&scene=0&type=0&v=2`,
-      { headers: await this.getHeaders() }
-    );
-    return result.data;
+    try {
+      const result = await axios.get(`https://i.weread.qq.com/store/search?author=&authorVids=&count=${count}&fromBookId=&keyword=${encodeURI(title)}&maxIdx=0&outer=1&scene=0&type=0&v=2`,
+        { headers: await this.getHeaders() }
+      );
+      return result.data;
+    } catch (error) {
+
+      if (error.message.includes('401')) {
+        await this.refreshPage();
+        await this.findBookByTitle(title, count);
+      } else throw error;
+    }
+
     // result格式如下
   //   {
   //     "records": [],
