@@ -126,7 +126,7 @@ class WechatAccountService extends Service {
     await ctx.helper.asyncRedis('hmset', 'cookie', 'skey', skey, 'vid', vid);
   }
   async refreshCookie(ctx) {
-    if (!process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       try {
         const browser = await puppeteer.launch({
           args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
@@ -197,7 +197,7 @@ class WechatAccountService extends Service {
       );
       return result.data;
     } catch (error) {
-
+      console.log(error);
       if (error.message.includes('401')) {
         await this.refreshPage();
         await this.findBookByTitle(title, count);
