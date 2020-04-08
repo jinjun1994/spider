@@ -43,6 +43,16 @@ const config = {
     // 存储抓取微信公众号历史列表的 key 名称
     PROFILE_LIST_KEY: 'wechat_spider:profile_list'
   },
+  sequelize : {
+    dialect: 'mysql',// 数据库类型 support: mysql, mariadb, postgres, mssql 
+    host: '127.0.0.1', 
+    port: 3306,   
+    username: 'root',
+    password: '',
+    database: 'wechat', // 数据库名称
+    delegate: 'wechatModel', // load all models to `app[delegate]` and `ctx[delegate]`, default to `model`
+    baseDir: 'wechatModel', // load all files in `app/${baseDir}` as models, default to `model`
+  },
 }
 // 加载自定义的配置
 try {

@@ -15,4 +15,9 @@ module.exports = app => {
   router.get('/weibo', controller.weibo.index);
   router.get('/wechat/account', controller.wechatAccount.index);
   router.post('/wechat/submit', controller.wechatAccount.submit);
+
+
+  // wechat mysql
+  router.get('/mysql/wechat/account', controller.mysql.wechatAccount.index);
+
 };

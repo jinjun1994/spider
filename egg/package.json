@@ -13,6 +13,8 @@
     "egg": "^2.15.1",
     "egg-mongoose": "^3.2.0",
     "egg-scripts": "^2.11.0",
+    "egg-sequelize": "^5.2.1",
+    "mysql2": "^2.1.0",
     "promise.allsettled": "^1.0.2",
     "puppeteer": "^2.1.1",
     "redis": "^3.0.2",
