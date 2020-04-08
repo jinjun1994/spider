@@ -5,7 +5,7 @@
         <div class="block">
           <img
 
-            src="../assets/images/zhuye.png"
+            src="https://jinjun1994.oss-cn-hangzhou.aliyuncs.com/images/zhuye.png"
             alt=""
           >
           <p>将博主主页链接提交到下方，点击提交即可自动爬取。</p>
@@ -16,7 +16,7 @@
             clearable
             :debounce="300"
             style="max-width:500px"
-            placeholder="请输主页链接"
+            placeholder="提交微博：请输入主页链接"
             @input="inputChange"
           >
           </el-input>
@@ -27,13 +27,37 @@
             提交
           </el-button>
         </div>
+        <div class="block">
+          <img
+
+            src="https://jinjun1994.oss-cn-hangzhou.aliyuncs.com/images/account.png"
+            alt=""
+          >
+          <p>将微信公众号名称提交到下方，点击提交即可自动爬取。</p>
+
+          <el-input
+            v-model="title"
+            clearable
+            :debounce="300"
+            style="max-width:500px"
+            placeholder="提交公众号： 请输入公众号名称"
+            @input="inputChange"
+          >
+          </el-input>
+          <el-button
+            :disabled="!title"
+            @click="submitAccount"
+          >
+            提交
+          </el-button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { fetchWeibo, findUserById, submit } from '../api';
+import { fetchWeibo, findUserById, submit, submitAccount } from '../api';
 const debounce = require('debounce');
 export default {
   name: 'ItemList',
@@ -47,7 +71,8 @@ export default {
 
   data() {
     return {
-      input: ''
+      input: '',
+      title: ''
     };
   },
 
@@ -75,6 +100,18 @@ export default {
         text: '查询中'
       });
       const res = await submit(this.input);
+      console.log(res.data);
+      this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+        loadingInstance.close();
+        this.$message(res.data.message || '未知错误');
+      });
+
+    },
+    async submitAccount() {
+      const loadingInstance = this.$loading({
+        text: '查询中'
+      });
+      const res = await submitAccount(this.title);
       console.log(res.data);
       this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
         loadingInstance.close();
