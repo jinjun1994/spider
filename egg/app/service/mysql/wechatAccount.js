@@ -4,8 +4,10 @@ const Service = require('egg').Service;
 
 class WechatAccount extends Service {
   async list(Options) {
+    const { ctx } = this;
     return this.ctx.wechatModel.WechatAccount.findAndCountAll({
-      ...Options.page
+      where: Options,
+      ...ctx.helper.mysqlPageQuery(ctx.query)
     //   order: [[ 'created_at', 'desc' ], [ 'id', 'desc' ]],
     });
   }

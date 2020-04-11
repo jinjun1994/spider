@@ -9,7 +9,7 @@ class WechatAccountsController extends Controller {
     const { account } = ctx.query;
     const options = {
       ...(account ? { account } : {}),
-      page: ctx.helper.mysqlPageQuery(ctx.query)
+
     };
     const accounts = await ctx.service.mysql.wechatAccount.list(options);
     ctx.body = accounts;
