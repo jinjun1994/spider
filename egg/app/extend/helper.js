@@ -58,6 +58,11 @@ module.exports = {
     if (max === min) return max;
     if (max < min) [ min, max ] = [ max, min ];
     return Math.round(Math.random() * (max - min) + min);
+  },
+  sleep(min, max) {
+    const ms = max ? this.random(min, max) : min;
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
-
 };

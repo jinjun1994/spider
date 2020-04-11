@@ -239,6 +239,41 @@ class WechatAccountService extends Service {
   //     "hasMore": 0
   // }
   }
+  /**
+   * 通过微信读书接口查询公众号文章列表
+   * @param {String} bookId 公众号名称
+   * @return {Object} article
+   */
+  async getArticleList({ bookId } = {}) {
+    const list = [];
+    // 20 0 / 20 20
+    try {
+      const getBooks = async (offset, count = 20) => (await axios.get(`https://i.weread.qq.com/book/articles?bookId=MP_WXS_3242052866&count=${count}&offset=${offset}`,
+        { headers: await this.getHeaders() }
+      )).data;
+      let offset = 0;
+      let { reviews } = await getBooks(offset);
+      list.push(...reviews);
+      console.log(reviews);
+      while (reviews) {
+        offset += 20;
+        await this.ctx.helper.sleep(3000, 4000);
+        reviews = (await getBooks(offset)).reviews;
+        console.log(reviews);
+        if (reviews) list.push(...reviews);
+      }
+      return list;
+    } catch (error) {
+      console.log(error);
+      if (error.message.includes('401')) {
+        await this.refreshPage();
+        await this.getArticleList({ bookId });
+      } else if (error.message.includes('499')) {
+        // { errcode: -2003, errmsg: '参数格式错误' } 说明已经抓取完毕了
+        return list;
+      } else throw error;
+    }
+  }
   async getHeaders() {
     return {
       'User-Agent': 'WeRead/4.5.5 (iPhone; iOS 13.3.1; Scale/3.00)',
