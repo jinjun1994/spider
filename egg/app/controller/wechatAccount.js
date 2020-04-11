@@ -68,8 +68,8 @@ class WechatAccountsController extends Controller {
           account
         };
       } else {
-        const { books } = await ctx.service.wechatAccount.findBookByTitle(title);
-        books.filter(v => v.bookInfo && v.bookInfo.title === title && v.bookInfo.author === '公众号');
+        let { books } = await ctx.service.wechatAccount.findBookByTitle(title);
+        books = books.filter(v => v.bookInfo && v.bookInfo.title === title && v.bookInfo.author === '公众号');
         console.log(books[0]);
         if (books.length > 0) {
           const { bookInfo: { bookId, title, cover, intro } } = books[0];
