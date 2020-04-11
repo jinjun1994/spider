@@ -3,20 +3,19 @@
 const Service = require('egg').Service;
 
 class WechatAccount extends Service {
-  async list({ offset = 0, limit = 10 } = {}) {
+  async list(Options) {
     return this.ctx.wechatModel.WechatAccount.findAndCountAll({
-      offset,
-      limit,
+      ...Options.page
     //   order: [[ 'created_at', 'desc' ], [ 'id', 'desc' ]],
     });
   }
 
   async find(id) {
-    const user = await this.ctx.wechatModel.WechatAccount.findByPk(id);
-    if (!user) {
+    const account = await this.ctx.wechatModel.WechatAccount.findByPk(id);
+    if (!account) {
       this.ctx.throw(404, 'user not found');
     }
-    return user;
+    return account;
   }
   async findOneByOptions(Options) {
     const user = await this.ctx.wechatModel.WechatAccount.findOne({ where: Options });

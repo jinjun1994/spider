@@ -19,6 +19,7 @@ module.exports = app => {
 
   // wechat mysql
   router.get('/mysql/wechat/account', controller.mysql.wechatAccount.index);
+  router.get('/mysql/wechat/account/:id', controller.mysql.wechatAccount.show);
   router.get('/mysql/wechat/account/task', controller.mysql.wechatAccountTask.index);
   router.get('/mysql/wechat/article', controller.mysql.wechatArticle.index);
   router.get('/mysql/wechat/comment', controller.mysql.wechatArticleComment.index);

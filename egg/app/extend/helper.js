@@ -15,10 +15,31 @@ module.exports = {
    * @return {Object} {skip, limit, sort}
    */
   pageQuery(options) {
-    let page = options.page;
-    let size = options.size;
+
     let sort = options.sort;
     const order = options.order;
+    const { offset, limit } = this.query(options);
+    if (sort) {
+      if (order === '-1') {
+        sort = { [sort]: -1 };
+      } else {
+        sort = { [sort]: 1 };
+      }
+      return {
+        sort,
+        skip: offset,
+        limit
+      };
+    }
+
+    return {
+      skip: offset,
+      limit
+    };
+  },
+  query(options) {
+    let page = options.page;
+    let size = options.size;
     if (!page) {
       page = 0;
     } else {
@@ -33,23 +54,13 @@ module.exports = {
       size = parseInt(size);
     }
 
-    if (sort) {
-      if (order === '-1') {
-        sort = { [sort]: -1 };
-      } else {
-        sort = { [sort]: 1 };
-      }
-      return {
-        sort,
-        skip: size * page,
-        limit: size,
-      };
-    }
-
     return {
-      skip: size * page,
+      offset: size * page,
       limit: size,
     };
+  },
+  mysqlPageQuery(options) {
+    return this.query(options);
   },
   asyncRedis(cmd, ...args) {
     return promisify(redisClient[cmd]).call(redisClient, ...args);
