@@ -38,7 +38,7 @@
     "stop": "egg-scripts stop --title=egg-server-jinjun",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
-    "test": "TEST_TIMEOUT=5000000 npm run lint -- --fix && npm run test-local",
+    "test": "npm run lint -- --fix && npm run test-local TEST_TIMEOUT=5000000",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",

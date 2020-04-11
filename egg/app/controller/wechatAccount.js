@@ -58,8 +58,9 @@ class WechatAccountsController extends Controller {
   async submit(ctx) {
     try {
       const { title } = ctx.request.body;
+      // 此处title 即是公众号昵称
       console.log(title);
-      const account = await ctx.service.wechatAccount.findByTitle(title);
+      const account = await this.ctx.service.mysql.wechatAccount.findOneByOptions({ account: title });
 
       if (account) {
         ctx.body = {
@@ -72,28 +73,17 @@ class WechatAccountsController extends Controller {
         console.log(books[0]);
         if (books.length > 0) {
           const { bookInfo: { bookId, title, cover, intro } } = books[0];
-          const account = await ctx.service.wechatAccount.create({
-            bookId,
-            title,
-            cover,
-            intro
-          });
-          if (account) {
-            account.message = title + '收录成功';
-            ctx.body = account;
-          } else {
-            ctx.body = {
-              message: '提交失败',
-              account
-            };
-          }
+          ctx.service.wechatAccount.makeTask({ bookId });
+
+          ctx.body = {
+            message: title + '收录成功，正在抓取文章'
+          };
         } else {
           ctx.body = {
             message: `${title} 未找到，请确认输入正确`,
             account
           };
         }
-
       }
 
 

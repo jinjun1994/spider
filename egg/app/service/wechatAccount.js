@@ -4,8 +4,9 @@ const Service = require('egg').Service;
 const allSettled = require('promise.allsettled');
 const axios = require('axios');
 const puppeteer = require('puppeteer');
+const url = require('url');
 let page;
-let url;
+let pageUrl;
 class WechatAccountService extends Service {
 
   // ////////////////////////数据库或其他外部环境相关调用的封装///////////////////////////
@@ -118,8 +119,8 @@ class WechatAccountService extends Service {
   async findByUsername(username) {
     return await this.app.model.WechatAccount.findOne({ username });
   }
-  async getKeysFromCookie(url, page, ctx) {
-    const cookiesSet = await page.cookies(url);
+  async getKeysFromCookie(pageUrl, page, ctx) {
+    const cookiesSet = await page.cookies(pageUrl);
     const key = (key) => [ ...cookiesSet ].filter(v => v.name === key)[0].value;
     const skey = key('wr_skey');
     const vid = key('wr_vid');
@@ -134,14 +135,14 @@ class WechatAccountService extends Service {
           userDataDir: './myUserDataDir',
         // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
         });
-        url = 'https://weread.qq.com/';
+        pageUrl = 'https://weread.qq.com/';
         page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.0 Safari/537.36');
 
-        await page.goto(url,
+        await page.goto(pageUrl,
         // { waitUntil: 'networkidle0' }
         );
-        await this.getKeysFromCookie(url, page, this.ctx);
+        await this.getKeysFromCookie(pageUrl, page, this.ctx);
         //   browser.close();
 
         //   setInterval(async () => {
@@ -153,7 +154,7 @@ class WechatAccountService extends Service {
           await page.evaluate(() => {
             location.reload(true);
           });
-          await this.getKeysFromCookie(url, page, this.ctx);
+          await this.getKeysFromCookie(pageUrl, page, this.ctx);
           console.log(await this.ctx.helper.asyncRedis('hmget', 'cookie', 'skey', 'vid'));
           setTimeout(go, this.ctx.helper.random(1000 * 60 * 20, 1000 * 60 * 30));
         // setTimeout(go, ctx.helper.random(1000 * 10, 1000 * 15));
@@ -170,7 +171,7 @@ class WechatAccountService extends Service {
     await page.evaluate(() => {
       location.reload(true);
     });
-    await this.getKeysFromCookie(url, page, this.ctx);
+    await this.getKeysFromCookie(pageUrl, page, this.ctx);
   }
   async getKeys() {
     try {
@@ -241,28 +242,86 @@ class WechatAccountService extends Service {
   }
   /**
    * 通过微信读书接口查询公众号文章列表
-   * @param {String} bookId 公众号名称
-   * @return {Object} article
+   * @param {String} bookId 公众号bookid
+   * @return {Array}  [{
+            "reviewId": "MP_WXS_3242052866_dymTNtk3wAg0ONDICDciNA",
+            "review": {
+                "reviewId": "MP_WXS_3242052866_dymTNtk3wAg0ONDICDciNA",
+                "userVid": 10003,
+                "type": 16,
+                "content": "",
+                "createTime": 1478334327,
+                "bookId": "",
+                "belongBookId": "MP_WXS_3242052866",
+                "mpInfo": {
+                    "originalId": "dymTNtk3wAg0ONDICDciNA",
+                    "doc_url": "https://mp.weixin.qq.com/s?__biz=MzI0MjA1Mjg2Ng==&mid=2649867007&idx=1&sn=3d55b33cc7833fdc18c091759f79c016&chksm=f1075892c670d184322b38031609a201754080f96ccd36ab6db620e4f0e6ac4a46aca0ca2fc2#rd",
+                    "pic_url": "http://mmbiz.qpic.cn/mmbiz_jpg/nBKX0s8fer23boDood8zZSbR0rAB2G8Y3lGPju5LWk9uFA4owk1swiazicN5zPiclDHOLRA5oJUf3MPU0GdLGJibPg/0?wx_fmt=jpeg",
+                    "title": "东南亚电商创业环境",
+                    "content": "东南亚电商的格局一个字，乱，两个字，烧钱。",
+                    "mp_name": "caoz的梦呓",
+                    "avatar": "http://wx.qlogo.cn/mmhead/Q3auHgzwzM6KKoAryS1XgNSrsD8icEEgrk6XQWA4syu6T2ia6xR4kVAw/0",
+                    "time": 1478334327,
+                    "payType": 0,
+                    "inner": 0
+                },
+                "score": 1478334327,
+                "mpRank": 1,
+                "isLike": 0,
+                "isReposted": 0,
+                "book": {
+                    "bookId": "",
+                    "format": "",
+                    "version": 0,
+                    "soldout": 0,
+                    "type": 0,
+                    "paytype": 0,
+                    "cover": "",
+                    "title": "",
+                    "author": ""
+                },
+                "author": {
+                    "userVid": 10003,
+                    "name": "MP",
+                    "avatar": "",
+                    "isFollowing": 0,
+                    "isFollower": 0
+                }
+            },
+            "likesCount": 1
+        }]
    */
   async getArticleList({ bookId } = {}) {
     const list = [];
     // 20 0 / 20 20
+    const dealList = () => Array.from(list, ({ review:
+      { belongBookId: bookId,
+        mpInfo: {
+          doc_url, // 文章地址
+          pic_url, // 封面图片地址
+          title, // 文章标题
+          time, // 文章发布时间
+          content, // 文章简介
+          mp_name, // 公众号名称
+          avatar // 公众号头像
+        }
+      } }, i) => ({
+      bookId, doc_url, pic_url, title, time, content, mp_name, avatar
+    }));
     try {
-      const getBooks = async (offset, count = 20) => (await axios.get(`https://i.weread.qq.com/book/articles?bookId=MP_WXS_3242052866&count=${count}&offset=${offset}`,
+      const getBooks = async (offset, count = 20) => (await axios.get(`https://i.weread.qq.com/book/articles?bookId=${bookId}&count=${count}&offset=${offset}`,
         { headers: await this.getHeaders() }
       )).data;
       let offset = 0;
       let { reviews } = await getBooks(offset);
       list.push(...reviews);
-      console.log(reviews);
-      while (reviews) {
+      while (reviews && reviews.length) {
         offset += 20;
         await this.ctx.helper.sleep(3000, 4000);
         reviews = (await getBooks(offset)).reviews;
-        console.log(reviews);
-        if (reviews) list.push(...reviews);
+        if (reviews && reviews.length) list.push(...reviews);
       }
-      return list;
+      return dealList();
     } catch (error) {
       console.log(error);
       if (error.message.includes('401')) {
@@ -270,7 +329,7 @@ class WechatAccountService extends Service {
         await this.getArticleList({ bookId });
       } else if (error.message.includes('499')) {
         // { errcode: -2003, errmsg: '参数格式错误' } 说明已经抓取完毕了
-        return list;
+        return dealList();
       } else throw error;
     }
   }
@@ -283,7 +342,27 @@ class WechatAccountService extends Service {
       ...(await this.getKeys())
     };
   }
+  /**
+   * 创建 mysql数据库中 account_task 和article_task
+   * 绕过关注公众号抓取，原理:一次性拿到所有已经存在的文章，后续抓取更新的文章因为不超过15篇，不用关注即可抓取
+   * @param {String} bookId 公众号名称
+   */
+  async makeTask({ bookId } = {}) {
+    const articles = await this.getArticleList({ bookId });
+    const articleTask = Array.from(articles, ({ doc_url }) => {
+      const { query: { __biz, sn } } = url.parse(doc_url, true);
 
+      return {
+        biz: __biz,
+        sn,
+        article_url: doc_url.replace('#rd', '&scene=27#wechat_redirect'),
+        state: 0,
+      };
+    });
+    const biz = articleTask[0].biz;
+    await this.ctx.service.mysql.wechatAccountTask.create({ biz });
+    await this.ctx.service.mysql.wechatArticleTask.creates(articleTask);
+  }
   async findByTitle(title) {
     return await this.app.model.WechatAccount.findOne({ title });
   }

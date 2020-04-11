@@ -14,6 +14,10 @@ module.exports = app => {
     tableName,
     createdAt: false,
     updatedAt: false,
+    indexes: [
+      { unique: 'sn', fields: [ 'sn' ] },
+      { fields: [ 'state' ] },
+    ]
   });
 
   return WechatArticleTask;

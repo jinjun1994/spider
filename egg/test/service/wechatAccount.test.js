@@ -32,7 +32,9 @@ describe('test/service/wechatAccount.test.js', () => {
   });
   it('should  getArticleList', async () => {
     const ctx = app.mockContext();
-    const books = await ctx.service.wechatAccount.getArticleList({ bookId: 'MP_WXS_3242052866' });
+    // const books = await ctx.service.wechatAccount.getArticleList({ bookId: 'MP_WXS_3242052866' });
+    // const books = await ctx.service.wechatAccount.getArticleList({ bookId: 'MP_WXS_3235488888' });
+    const books = await ctx.service.wechatAccount.getArticleList({ bookId: 'MP_WXS_3235488888' });
     // console.log(books);
     console.log(books.length);
     assert(books);
