@@ -107,7 +107,7 @@ export default {
     },
     resizeIframe($event) {
       console.log($event);
-      const iframe = $event.path[0];
+      // const iframe = $event.path[0];
       // iframe.style.height = 0;
       // iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
     }
