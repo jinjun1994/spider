@@ -41,3 +41,14 @@ export async function analyze({ user_id } = {}) {
   const list = await axios.get('/api/weibo/analyze/' + user_id, { user_id });
   return list;
 }
+
+// 微信公众号相关api
+export async function fetchAccount(params) {
+  return await axios.get('/api/mysql/wechat/account', { params });
+}
+export async function findAccountById(id) {
+  return await axios.get('/api/mysql/wechat/account/' + id);
+}
+export async function fetchArticle(params) {
+  return await axios.get('/api/mysql/wechat/article', { params });
+}

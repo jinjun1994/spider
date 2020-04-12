@@ -14,8 +14,11 @@
         <router-link to="/weibo">
           微博
         </router-link>
-        <router-link to="/submit">
-          提交
+        <router-link to="/account">
+          公众号
+        </router-link>
+        <router-link to="/article">
+          文章
         </router-link>
         <!-- <router-link to="/ask">
           Ask
