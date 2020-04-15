@@ -37,10 +37,33 @@
         </el-button> -->
       </div>
       <div class="host">
-        关注数： {{ item.following }}
+        <span>关注数： {{ item.following }}</span>    <span>粉丝：{{ item.followers }}</span>
       </div>
       <div class="host">
-        粉丝：{{ item.followers }}
+      </div>
+      <div
+        v-if="item.description"
+        class="host"
+      >
+        简介：{{ item.description }}
+      </div>
+      <div
+        v-if="item.work"
+        class="host"
+      >
+        工作：{{ item.work }}
+      </div>
+      <div
+        v-if="item.education"
+        class="host"
+      >
+        教育经历：{{ item.education }}
+      </div>
+      <div
+        v-if="item.verified_reason"
+        class="host"
+      >
+        微博认证：{{ item.verified_reason }}
       </div>
       <div
         v-if="page===1&&user_id"
