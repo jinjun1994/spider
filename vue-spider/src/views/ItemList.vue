@@ -6,10 +6,8 @@
           <el-input
             v-model="input"
             clearable
-            :debounce="300"
             style="max-width:500px"
             placeholder="请输入昵称"
-            @input="inputChange"
           >
           </el-input>
           <el-table
@@ -152,9 +150,13 @@ export default {
     async order(to, from) {
       await this.fetchPeople();
     },
-    async input(to, from) {
+    input: debounce(async function(nickname) {
+      console.log(nickname);
+      this.$router.push({
+        query: this.merge(this.$route.query, { nickname })
+      }).catch(err => {});
       await this.fetchPeople();
-    },
+    }, 300)
   },
 
   async beforeMount() {
@@ -200,12 +202,6 @@ export default {
       }).catch(err => {});
 
     },
-    inputChange: debounce(function(nickname) {
-      console.log(nickname);
-      this.$router.push({
-        query: this.merge(this.$route.query, { nickname })
-      }).catch(err => {});
-    }, 300),
     sortChange(v) {
       console.log(v);
       let { prop: sort, order } = v;
