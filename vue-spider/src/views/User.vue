@@ -6,7 +6,6 @@
           <el-input
             v-model="input"
             clearable
-            :debounce="300"
             style="max-width:500px"
             placeholder="请输内容搜索"
             @input="inputChange"

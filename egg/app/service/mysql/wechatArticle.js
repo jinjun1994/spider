@@ -1,12 +1,16 @@
 'use strict';
 
 const Service = require('egg').Service;
-
+const { Op } = require('sequelize');
 class WechatArticle extends Service {
   async list(Options) {
     const { ctx } = this;
     return this.ctx.wechatModel.WechatArticle.findAndCountAll({
-      where: Options,
+      where: { ...Options,
+        id: {
+          [Op.ne]: null
+        }
+      },
       attributes: { exclude: [ 'content_html' ] }, // 排除该字段
 
       ...ctx.helper.mysqlPageQuery(ctx.query)

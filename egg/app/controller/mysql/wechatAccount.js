@@ -1,5 +1,6 @@
 'use strict';
 const Controller = require('egg').Controller;
+const { Op } = require('sequelize');
 /**
   * @controller
   */
@@ -8,9 +9,12 @@ class WechatAccountsController extends Controller {
 
     const { account } = ctx.query;
     const options = {
-      ...(account ? { account } : {}),
+      ...(account ? { account: {
+        [Op.like]: `%${account}%`
+      } } : {}),
 
     };
+    console.log(options);
     const accounts = await ctx.service.mysql.wechatAccount.list(options);
     ctx.body = accounts;
   }

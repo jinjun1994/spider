@@ -18,6 +18,7 @@
     "promise.allsettled": "^1.0.2",
     "puppeteer": "^2.1.1",
     "redis": "^3.0.2",
+    "sequelize": "^5.21.5",
     "superagent": "^5.2.2",
     "util": "^0.12.2"
   },

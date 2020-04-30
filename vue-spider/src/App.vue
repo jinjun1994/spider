@@ -20,6 +20,9 @@
         <router-link to="/article">
           文章
         </router-link>
+        <router-link to="/submit">
+          提交
+        </router-link>
         <!-- <router-link to="/ask">
           Ask
         </router-link>

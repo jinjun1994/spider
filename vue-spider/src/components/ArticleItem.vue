@@ -3,7 +3,6 @@
     <el-card
       class="box-card"
       @mouseenter.native="iframeVisible=true;iframeShow=true"
-      @mouseleave.native="iframeShow=false"
     >
       <div
         slot="header"

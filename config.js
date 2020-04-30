@@ -37,7 +37,7 @@ const config = {
   redis: {
     port: 6379,
     host: '127.0.0.1',
-
+    password: null, //无密码默认null 即可
     // 存储抓取文章列表的 key 名称
     POST_LIST_KEY: 'wechat_spider:post_list',
     // 存储抓取微信公众号历史列表的 key 名称

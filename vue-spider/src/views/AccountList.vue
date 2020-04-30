@@ -1,48 +1,20 @@
 <template>
-  <div class="item-list">
+  <div class="account-list">
     <div class="news-view">
       <div class="news-list-nav">
         <div class="block">
           <el-input
             v-model="input"
+            size="small"
             clearable
             :debounce="300"
             style="max-width:500px"
-            placeholder="请输入昵称"
+            placeholder="请输入昵称搜索"
             @input="inputChange"
           >
           </el-input>
-          <el-table
-            class="user"
-            style="max-width:500px"
-            :fit="false"
-            :data="tableData"
-            @sort-change="sortChange"
-          >
-            <!-- <template slot="empty">
-          _id: "5e5b81debb0873db51666122"
-id: "5687069307"
-nickname: "ETF拯救世界"
-weibo_num: 8019
-following: 262
-followers: 338100
-        </template> -->
-            <el-table-column
-              prop="followers"
-              label="粉丝"
-              sortable="custom"
-              :sort-orders="['descending','ascending', null]"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="weibo_num"
-              label="微博"
-              sortable="custom"
-              :sort-orders="['descending','ascending', null]"
-            >
-            </el-table-column>
-          </el-table>
           <el-pagination
+            small
             layout="prev, sizes,pager, next,jumper"
             :total="total"
             :page-sizes="[10, 20, 30, 40]"
@@ -153,7 +125,7 @@ export default {
       await this.fetchPeople();
     },
     async input(to, from) {
-      await this.fetchPeople();
+    //
     },
   },
 
@@ -177,7 +149,7 @@ export default {
           total: true,
           page: this.page,
           size: this.size,
-          ...(this.nickname ? { nickname: this.nickname } : {}),
+          ...(this.nickname ? { account: this.nickname } : {}),
           ...(sort ? { sort } : {}),
           ...(order ? { order } : {})
         }
@@ -200,11 +172,12 @@ export default {
       }).catch(err => {});
 
     },
-    inputChange: debounce(function(nickname) {
+    inputChange: debounce(async function(nickname) {
       console.log(nickname);
       this.$router.push({
         query: this.merge(this.$route.query, { nickname })
       }).catch(err => {});
+      await this.fetchPeople();
     }, 300),
     sortChange(v) {
       console.log(v);
@@ -231,9 +204,9 @@ export default {
 </script>
 
 <style lang="stylus" >
-.item-list
+.account-list
   .news-view
-    padding-top 150px
+    padding-top 80px
 
   .news-list-nav, .news-list
     background-color #fff
