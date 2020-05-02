@@ -81,5 +81,14 @@ async getUserList(where,regexp){
  } catch(error) {
    console.log(error)
 }
-}
+},
+  async  fetchAccount(params) {
+    return await axiosInstance.get('mysql/wechat/account', { params });
+  },
+   async  findAccountById(id) {
+    return await axiosInstance.get('mysql/wechat/account/' + id);
+  },
+   async  fetchArticle(params) {
+    return await axiosInstance.get('mysql/wechat/article', { params });
+  }
 }
