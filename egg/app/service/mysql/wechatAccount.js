@@ -7,7 +7,7 @@ class WechatAccount extends Service {
     const { ctx } = this;
     return this.ctx.wechatModel.WechatAccount.findAndCountAll({
       where: Options,
-      ...ctx.helper.mysqlPageQuery(ctx.query)
+      ...(ctx.query.full === 'true' ? {} : ctx.helper.mysqlPageQuery(ctx.query))
     //   order: [[ 'created_at', 'desc' ], [ 'id', 'desc' ]],
     });
   }
