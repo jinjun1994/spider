@@ -14,7 +14,7 @@
         <router-link to="/weibo">
           微博
         </router-link>
-        <router-link to="/account">
+        <router-link to="/accounts">
           公众号
         </router-link>
         <router-link to="/article">
