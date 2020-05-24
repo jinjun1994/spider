@@ -155,6 +155,9 @@ export default {
     user_id() {
       return this.$route.params.user_id;
     },
+    account() {
+      return this.$route.params.account;
+    },
     sort() {
       console.log(this.$route.query.sort);
       return this.$route.query.sort;
@@ -235,6 +238,7 @@ export default {
           total: true,
           page: this.page,
           size: this.size,
+          ...(this.account ? { account: this.account } : {}),
           ...(this.user_id ? { user_id: this.user_id } : {}),
           ...(this.content ? { content: this.content } : {}),
           ...(sort ? { sort } : {}),

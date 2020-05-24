@@ -10,7 +10,7 @@
         class="clearfix"
       >
         <router-link
-          :to="'/user/'+item.id"
+          :to="'/account/'+item.account"
         >
           <section class="head-url">
             <img
@@ -35,7 +35,7 @@
         >
         <span
           class="score"
-          @click="$router.push({path:`/user/${item.id}`}).catch(err=>{})"
+          @click="$router.push({path:`/account/${item.account}`}).catch(err=>{})"
         > {{ item.weibo_num }}</span>
 
 
@@ -99,37 +99,14 @@
         上次抓取 {{ new Date(item.spider_time).toLocaleString() }}
       </div>
       <div class="host">
-        微博合集下载：
-        <a
-          style="margin: 0 0.5em"
-          target="_blank"
-          :href="`${ossurl}/weibos/${item.nickname}/${item.id}.csv`"
-          :download="`${item.nickname}.csv`"
-        >  excel格式</a>
-        <a
-          style="margin: 0 0.5em"
-          target="_blank"
-          :href="`${ossurl}/weibos/${item.nickname}/${item.id}.txt`"
-          :download="`${item.nickname}.txt`"
-        >  text格式</a>
-        <a
-          style="margin: 0 0.5em"
-          target="_blank"
-          :href="`${ossurl}/weibos/${item.nickname}/${item.id}.json`"
-          :download="`${item.nickname}.json`"
-        >  json格式</a>
+        微信文章合集下载：
+
         <a
           style="margin: 0 0.5em"
           target="_blank"
           :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集time.pdf`"
           :download="`${item.nickname}time.pdf`"
-        >  pdf格式(时间排序)</a>
-        <a
-          style="margin: 0 0.5em"
-          target="_blank"
-          :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集number.pdf`"
-          :download="`${item.nickname}number.pdf`"
-        >  pdf格式(热度排序)</a>
+        >  pdf格式</a>
       </div>
     </el-card>
   </div>
