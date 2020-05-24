@@ -76,7 +76,10 @@ const merge = require("easy-pdf-merge");
     if (fs.existsSync(`${k}.pdf`) ) {
       fs.unlinkSync(`${k}.pdf`)
     }
+    if (v.all.length > 0) {
       await mergePdfs(v.all, k);
+    }
+  
     
   }
 })();
