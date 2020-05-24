@@ -39,3 +39,4 @@ https://www.npmjs.com/package/jsonfile
 https://www.npmjs.com/package/request-promise
 https://www.npmjs.com/package/buffer-image-size
 https://www.npmjs.com/package/redis
+https://www.npmjs.com/package/pdf-merger-js
