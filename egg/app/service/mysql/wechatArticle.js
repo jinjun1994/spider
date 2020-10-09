@@ -13,7 +13,8 @@ class WechatArticle extends Service {
       },
       attributes: { exclude: [ 'content_html' ] }, // 排除该字段
 
-      ...(ctx.query.full === 'true' ? {} : ctx.helper.mysqlPageQuery(ctx.query))
+      ...(ctx.query.full === 'true' ? {} : ctx.helper.mysqlPageQuery(ctx.query)),
+      order: [[ 'publish_time', 'desc' ]],
     //   order: [[ 'created_at', 'desc' ], [ 'id', 'desc' ]],
     });
   }
