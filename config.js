@@ -23,7 +23,7 @@ const config = {
     env,
     isDev,
     isProd,
-
+    cookies:[],
     // oss相关配置
     ossAuth:{
         "region": "region",
