@@ -8,7 +8,14 @@ import store from './store';
 import ProgressBar from './components/ProgressBar.vue';
 // import './plugins/element.js';
 import merge from 'webpack-merge';
+
+import VueQrcode from '@chenfengyuan/vue-qrcode';
+
+
 const Vue = window.Vue;
+
+Vue.component(VueQrcode.name, VueQrcode);
+
 Vue.prototype.merge = merge;
 // eslint-disable-next-line
 Vue.prototype.ossurl = "https://jinjun1994.oss-cn-hangzhou.aliyuncs.com";

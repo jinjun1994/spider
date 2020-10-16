@@ -2,30 +2,23 @@
   <li class="news-item">
     <el-card
       class="box-card"
-      @mouseenter.native="iframeVisible=true;iframeShow=true"
     >
       <div
         slot="header"
         class="clearfix"
       >
-        <span
-          v-show="!iframeVisible||!iframeShow"
-        >
+        <span>
           <b> {{ item.title }}</b>
         </span>
-        <p
-          v-show="!iframeVisible||!iframeShow"
-        >
+        <p>
           摘要： {{ item.digest }}
         </p>
-        <iframe
-          v-if="iframeVisible"
-          v-show="iframeShow"
-          style="width:100%;height:1000px"
-          :src="item.url"
-          frameborder="0"
-          @load="resizeIframe($event)"
-        ></iframe>
+        <!-- <img
+          :src="item.cover"
+          alt=""
+          srcset=""
+        > -->
+
         <!-- <span class="host">
           <a
             :href="'https://weibo.com/'+item.user_id+'/'+item.id"
@@ -41,10 +34,15 @@
 
 
       <div class="host top">
+        <qrcode
+          class="qr-code"
+          :value="url"
+          :options="{ width: 80 }"
+        ></qrcode>
         <a
-          :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=repost'"
           target="_blank"
           rel="noopener"
+          @click="$router.push({path:`/account/${item.account}`}).catch(err => {})"
         >
           作者: {{ item.author?item.author:item.account }} </a>
       </div>
@@ -60,6 +58,13 @@
           @click="$router.push({path:`/user/${item.user_id}`})"
         >
           {{ item.author.nickname }}
+        </a>
+        <a
+          v-if="$route.name!=='User'"
+          style="cursor: pointer;"
+          @click="openUrl"
+        >
+          点击阅读
         </a>
       </div>
     </el-card>
@@ -82,6 +87,7 @@
 // "user_id": "5339148412"
 // },
 import { timeAgo } from '../util/filters';
+const parseUrl = require('parse-url');
 
 export default {
   name: 'NewsItem',
@@ -95,9 +101,13 @@ export default {
   },
   data() {
     return {
-      iframeVisible: false,
-      iframeShow: false
     };
+  },
+  computed: {
+    url() {
+      const { protocol, resource, pathname, query: { __biz, mid, idx, sn } } = parseUrl(this.item.url, false);
+      return `${protocol}://${resource}${pathname}?__biz=${__biz}&mid=${mid}&idx=${idx}&sn=${sn}`;
+    }
   },
   // http://ssr.vuejs.org/en/caching.html#component-level-caching
   methods: {
@@ -109,6 +119,10 @@ export default {
       // const iframe = $event.path[0];
       // iframe.style.height = 0;
       // iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+    },
+    openUrl() {
+
+      window.open(this.item.url);
     }
   },
 };
@@ -119,5 +133,42 @@ export default {
     display: inline-block;
     max-width:32%
   }
-
+.news-item
+  background-color #fff
+  line-height 20px
+  padding 20px 30px 20px 30px
+  .box-card:hover
+      .hand
+        display:inline-block!important;
+        margin-left 0.51em
+  .hand
+     display none
+     color  #f60
+  .chart
+     height:400px
+     width:50%
+  .score
+    color #ff6600
+    padding-left 10px
+    font-size 1.1em
+    font-weight 700
+    width 80px
+    text-align center
+    margin-top -10px
+    cursor:pointer
+  .host
+    margin-left 5px
+    position relative
+    .qr-code
+      width 80px
+      position absolute
+      right 10px
+      top -20px
+  .meta, .host
+    font-size .85em
+    color #828282
+    a
+      color #828282
+      &:hover
+        color #ff6600
 </style>

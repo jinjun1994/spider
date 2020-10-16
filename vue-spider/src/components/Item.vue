@@ -12,8 +12,14 @@
         <router-link
           :to="'/user/'+item.id"
         >
-          {{ item.nickname }}
+          <span class="nickname">{{ item.nickname }}</span>
         </router-link>
+        <qrcode
+          class="qr-code"
+          :value="`https://weibo.com/u/${item.id}?is_all=1`"
+          :options="{ width: 64 }"
+        ></qrcode>
+
         <span
           class="score"
           @click="$router.push({path:`/user/${item.id}`}).catch(err=>{})"
@@ -131,13 +137,13 @@
         <a
           style="margin: 0 0.5em"
           target="_blank"
-          :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集time.pdf`"
+          :href="`${ossurl}/weibos/pdfs/${item.nickname}_微博合集_时间排序.pdf`"
           :download="`${item.nickname}time.pdf`"
         >  pdf格式(时间排序)</a>
         <a
           style="margin: 0 0.5em"
           target="_blank"
-          :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集number.pdf`"
+          :href="`${ossurl}/weibos/pdfs/${item.nickname}_微博合集_热度排序.pdf`"
           :download="`${item.nickname}number.pdf`"
         >  pdf格式(热度排序)</a>
       </div>
@@ -149,6 +155,7 @@
 /* global G2 mapboxgl */
 import { timeAgo } from '../util/filters';
 import { analyze } from '../api';
+
 const dayjs = require('dayjs');
 export default {
   name: 'NewsItem',
@@ -251,7 +258,7 @@ export default {
 };
 </script>
 
-<style lang="stylus" >
+<style lang="stylus" scoped>
 .news-item
   background-color #fff
   line-height 20px
@@ -260,12 +267,25 @@ export default {
       .hand
         display:inline-block!important;
         margin-left 0.51em
+  .box-card
+      position relative
+      .clearfix
+        display flex
+        align-items center
+        padding 6px 0
+        .qr-code
+          width 64px
+          position absolute
+          right 10px
+          top 3px
   .hand
      display none
      color  #f60
   .chart
      height:400px
      width:50%
+  .nickname
+    padding 5px 0
   .score
     color #ff6600
     padding-left 10px
@@ -273,7 +293,6 @@ export default {
     font-weight 700
     width 80px
     text-align center
-    margin-top -10px
     cursor:pointer
   .host
     margin-left 5px

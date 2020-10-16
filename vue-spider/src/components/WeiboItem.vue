@@ -71,7 +71,13 @@
         >
         </el-image>
       </template>
+
       <div class="host top">
+        <qrcode
+          class="qr-code"
+          :value="`https://weibo.com/${item.user_id}/${item.id}`"
+          :options="{ width: 64 }"
+        ></qrcode>
         <a
           :href="'https://weibo.com/'+item.user_id+'/'+item.id+'?type=repost'"
           target="_blank"
@@ -146,5 +152,44 @@ export default {
     display: inline-block;
     max-width:32%
   }
+.news-item
+  background-color #fff
+  line-height 20px
+  padding 20px 30px 20px 30px
+  .box-card:hover
+      .hand
+        display:inline-block!important;
+        margin-left 0.51em
+
+  .hand
+     display none
+     color  #f60
+  .chart
+     height:400px
+     width:50%
+  .score
+    color #ff6600
+    padding-left 10px
+    font-size 1.1em
+    font-weight 700
+    width 80px
+    text-align center
+    margin-top -10px
+    cursor:pointer
+  .host
+    margin-left 5px
+    position relative
+    .qr-code
+          width 64px
+          position absolute
+          right 10px
+          top -10px
+  .meta, .host
+    font-size .85em
+    color #828282
+    a
+      color #828282
+      &:hover
+        color #ff6600
 
 </style>

@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@antv/g2": "^4.0.3",
+    "@chenfengyuan/vue-qrcode": "^1.0.2",
     "axios": "^0.19.2",
     "dayjs": "^1.8.23",
     "debounce": "^1.2.0",
     "element-ui": "^2.13.0",
+    "parse-url": "^5.0.2",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5",

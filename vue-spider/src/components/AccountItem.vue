@@ -55,48 +55,10 @@
       >
         认证信息：{{ item.verify }}
       </div>
-      <div
-        v-if="page===1&&user_id"
-        class="host"
-        @click.stop="1"
-      >
-        微博词云：
-        <el-image
-          v-if="item.nickname"
-          :src="`${ossurl}/weibos/${item.nickname}/${item.id}.csv.png`"
-          class="image"
-          :preview-src-list="[`${ossurl}/weibos/${item.nickname}/${item.id}.csv.png`]"
-        >
-        </el-image>
-        <!-- <img
-          :src="`/weibos/${item.nickname}/${item.id}.csv.png`"
-          class="image"
-          referrer-policy="no-referrer"
-        /> -->
-        <el-row>
-          <template
-            v-for="type in types"
-          >
-            <el-col
-              :key="type.type"
-              :span="24"
-              class="chart"
-              :style="{width:type.type==='monthly'?'100%':'50%'}"
-            >
-              <div
-                :id="type.type"
-              >
-              </div>
-              <span
-                :key="type.type"
-                style="text-align:center;width:100%;display: block;"
-              >{{ `${item.nickname}微博数量${type.title}统计` }}</span>
-            </el-col>
-          </template>
-        </el-row>
-      </div>
+
       <div class="host">
-        上次抓取 {{ new Date(item.spider_time).toLocaleString() }}
+        上次抓取 {{ new Date(item.accountTask.last_spider_time).toLocaleString() }}
+        上次发文 {{ new Date(item.accountTask.last_publish_time).toLocaleString() }}
       </div>
       <div class="host">
         微信文章合集下载：
@@ -104,8 +66,8 @@
         <a
           style="margin: 0 0.5em"
           target="_blank"
-          :href="`${ossurl}/weibos/pdfs/${item.nickname}微博合集time.pdf`"
-          :download="`${item.nickname}time.pdf`"
+          :href="`${ossurl}/articles/${item.biz}/${item.account}_微信文章合集.pdf`"
+          :download="`${item.account}_微信文章合集.pdf`"
         >  pdf格式</a>
       </div>
     </el-card>
