@@ -9,6 +9,11 @@ class WechatAccount extends Service {
       where: Options,
       ...(ctx.query.full === 'true' ? {} : ctx.helper.mysqlPageQuery(ctx.query)),
       // order: [[ 'publish_time', 'desc' ]],
+      include: [{
+        model: this.app.wechatModel.WechatAccountTask,
+        as: 'accountTask',
+        // attributes: [ 'userName' ]
+      }],
     });
   }
 

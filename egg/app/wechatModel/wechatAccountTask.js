@@ -16,5 +16,6 @@ module.exports = app => {
     updatedAt: false,
   });
 
+
   return WechatAccountTask;
 };

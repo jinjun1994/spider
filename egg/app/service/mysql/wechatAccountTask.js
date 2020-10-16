@@ -3,10 +3,11 @@
 const Service = require('egg').Service;
 
 class WechatAccountTask extends Service {
-  async list({ offset = 0, limit = 10 } = {}) {
+  async list(Options) {
+    const { ctx } = this;
     return this.ctx.wechatModel.WechatAccountTask.findAndCountAll({
-      offset,
-      limit,
+      where: Options,
+      ...(ctx.query.full === 'true' ? {} : ctx.helper.mysqlPageQuery(ctx.query)),
     //   order: [[ 'created_at', 'desc' ], [ 'id', 'desc' ]],
     });
   }

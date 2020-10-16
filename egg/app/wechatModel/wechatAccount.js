@@ -19,6 +19,8 @@ module.exports = app => {
     createdAt: false,
     updatedAt: false,
   });
-
+  WechatAccount.associate = function() {
+    app.wechatModel.WechatAccount.hasOne(app.wechatModel.WechatAccountTask, { foreignKey: 'biz', as: 'accountTask' });
+  };
   return WechatAccount;
 };
