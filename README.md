@@ -29,16 +29,16 @@ https://jizhi.amazingtm.com/
 
 ## Node
 爬虫及文件数据处理
-weiboSpider 爬虫抓取
-ossSync 抓取的微博数据，生成的词云，生成的Pdf等同步到阿里云Oss
+weiboSpider 爬虫抓取（无限循环）
+ossSync 抓取的微博数据，生成的词云，生成的Pdf等同步到阿里云Oss（）
 wordCloud 定时生成词云
 imageMin.js 提供图片压缩功能
 pdf.js  
 遍历所有微博json文件生成pdf
 读取超大json文件会内存溢出 解决方法：
-(node --max-old-space-size=15555  pdef.js 
+(node --max-old-space-size=15555  pdf.js 
 )
-  
+  articlePdf.js 生成微信文章
 
 
 # 配置
