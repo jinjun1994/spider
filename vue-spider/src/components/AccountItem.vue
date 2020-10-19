@@ -57,8 +57,8 @@
       </div>
 
       <div class="host">
-        上次抓取 {{ new Date(item.accountTask.last_spider_time).toLocaleString() }}
-        上次发文 {{ new Date(item.accountTask.last_publish_time).toLocaleString() }}
+        上次抓取 {{ item && item.accountTask? new Date(item.accountTask.last_spider_time).toLocaleString():'' }}
+        上次发文 {{ item && item.accountTask? new Date(item.accountTask.last_publish_time).toLocaleString():'' }}
       </div>
       <div class="host">
         微信文章合集下载：
