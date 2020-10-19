@@ -64,7 +64,7 @@ const merge = require("easy-pdf-merge");
     mergeFiles[
       `${baseUrl}/${
         account.account ? account.account : account.biz
-      }公众号文章合集`
+      }_微信文章合集`
     ] = {
       all: articleFiles,
       new: newArticleFiles,
