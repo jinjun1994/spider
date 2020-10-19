@@ -76,7 +76,7 @@ class UserService extends Service {
     try {
       const browser = await puppeteer.launch({
         args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
-        headless: false,
+        headless: true,
         // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });
       const page = await browser.newPage();
