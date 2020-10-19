@@ -1,6 +1,6 @@
-'use strict';
 
-const Service = require('egg').Service;
+
+const { Service } = require('egg');
 
 class WechatAccount extends Service {
   async list(Options) {
@@ -24,6 +24,7 @@ class WechatAccount extends Service {
     }
     return account;
   }
+
   async findOneByOptions(Options) {
     const user = await this.ctx.wechatModel.WechatAccount.findOne({ where: Options });
     // if (!user) {
@@ -35,6 +36,7 @@ class WechatAccount extends Service {
   async create(user) {
     return await this.ctx.wechatModel.WechatAccount.create(user);
   }
+
   async creates(list) {
     return await this.ctx.wechatModel.WechatAccount.bulkCreate(list, { validate: true });
   }

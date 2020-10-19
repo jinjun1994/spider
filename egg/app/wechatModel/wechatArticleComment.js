@@ -15,7 +15,7 @@ module.exports = app => {
     content_id: STRING(50), // '本条评论内容的id'
     like_num: INTEGER(11),
     is_top: INTEGER(11),
-    spider_time: DATE
+    spider_time: DATE,
   }, {
     tableName,
     createdAt: false,

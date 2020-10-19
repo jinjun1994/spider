@@ -1,6 +1,5 @@
 /* eslint valid-jsdoc: "off" */
 
-'use strict';
 
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -9,7 +8,7 @@ module.exports = appInfo => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
-   **/
+   * */
   const config = exports = {
 
     mongoose: {
@@ -33,12 +32,12 @@ module.exports = appInfo => {
       level: 'INFO',
       consoleLevel: 'INFO',
       outputJSON: true,
-      dir: '/home/wwwroot/jizhi.jinjun.wiki/egg_log'
-    }
+      dir: '/home/wwwroot/jizhi.jinjun.wiki/egg_log',
+    },
   };
 
   // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_1573328080173_7422';
+  config.keys = `${appInfo.name }_1573328080173_7422`;
 
   // add your middleware config here
   config.middleware = [];

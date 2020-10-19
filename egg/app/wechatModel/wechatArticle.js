@@ -25,9 +25,9 @@ module.exports = app => {
     createdAt: false,
     updatedAt: false,
     indexes: [
-      { unique: 'sn', fields: [ 'sn' ] },
-      { fields: [ 'biz' ] },
-    ]
+      { unique: 'sn', fields: ['sn'] },
+      { fields: ['biz'] },
+    ],
   });
 
   return WechatArticle;

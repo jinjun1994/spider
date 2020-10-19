@@ -4,14 +4,13 @@
 /**
  * Created by junesh on 2017/11/20.
  */
-'use strict';
-const Controller = require('egg').Controller;
+
+
+const { Controller } = require('egg');
 /**
   * @controller
   */
 class UsersController extends Controller {
-
-
   async index(ctx) {
     try {
       const { nickname, where, regexp } = ctx.query;
@@ -37,6 +36,7 @@ class UsersController extends Controller {
       throw err;
     }
   }
+
   async findById(ctx) {
     try {
       const { id } = ctx.params;
@@ -46,6 +46,7 @@ class UsersController extends Controller {
       throw err;
     }
   }
+
   async bulkWrite(ctx) {
     try {
       const { bulkWrite } = ctx.request.body;
@@ -55,6 +56,7 @@ class UsersController extends Controller {
       throw err;
     }
   }
+
   async submit(ctx) {
     try {
       const { url } = ctx.request.body;
@@ -66,33 +68,29 @@ class UsersController extends Controller {
 
         if (user) {
           ctx.body = {
-            message: `${nickname ? nickname : ''} 已经收录，无须提交`,
-            user
+            message: `${nickname || ''} 已经收录，无须提交`,
+            user,
           };
         } else {
           const user = await ctx.service.user.create({
             id,
             nickname,
             status: 0,
-            time: new Date('2010-1-1')
+            time: new Date('2010-1-1'),
           });
           if (user.errcode === 0) {
-            user.message = nickname + '收录成功';
+            user.message = `${nickname }收录成功`;
             ctx.body = user;
           } else {
             user.message = '提交失败';
             ctx.body = user;
           }
         }
-
       }
-
-
     } catch (err) {
       ctx.logger.warn(err);
       throw err;
     }
   }
-
 }
 module.exports = UsersController;

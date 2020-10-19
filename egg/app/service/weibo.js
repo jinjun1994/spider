@@ -1,10 +1,9 @@
-'use strict';
 
-const Service = require('egg').Service;
+
+const { Service } = require('egg');
 const allSettled = require('promise.allsettled');
 
 class WeiboService extends Service {
-
   // ////////////////////////数据库或其他外部环境相关调用的封装///////////////////////////
 
   // 1. mongoose
@@ -18,7 +17,7 @@ class WeiboService extends Service {
   async list(options, query) {
     try {
       const { skip, limit, sort } = query;
-      const params = { sort: sort ? sort : { publish_time: -1 } };
+      const params = { sort: sort || { publish_time: -1 } };
 
       if (skip !== undefined && limit !== undefined) {
         params.skip = skip;
@@ -27,13 +26,11 @@ class WeiboService extends Service {
       // https://cn.mongoosedoc.top/docs/populate.html#populate-virtuals
       return await this.app.model.Weibo.find(options, null, params)
         .populate({ path: 'author', select: 'nickname -_id -id weibo' });
-
-
     } catch (error) {
       throw error;
     }
-
   }
+
   /**
    * 微博分析
    * @param {Object} options 条件
@@ -41,11 +38,11 @@ class WeiboService extends Service {
    */
   async analyze({ user_id } = {}) {
     // user_id = this.service.crud.objectId(user_id);
-    const types = [ 'year', 'month', 'hour', 'dayOfWeek', 'dayOfMonth' ];
+    const types = ['year', 'month', 'hour', 'dayOfWeek', 'dayOfMonth'];
     return (await this.analyzeByTime({ user_id, types }))[0];
   }
-  async analyzeByTime({ user_id, types } = {}) {
 
+  async analyzeByTime({ user_id, types } = {}) {
     const $facet = {
 
     };
@@ -62,14 +59,14 @@ class WeiboService extends Service {
         _id: 0,
         [type]: '$_id',
         sum: '$sum',
-      }
+      },
       },
       { $sort: { _id: 1 } }];
     }
     $facet.monthly = [{ $group: {
       _id: {
         // $substr: [{ $add: [ '$created_at', 28800000 ] }, 0, 10 ]
-        $substr: [ '$publish_time', 0, 7 ]
+        $substr: ['$publish_time', 0, 7],
       },
       sum: { $sum: 1 },
     },
@@ -78,7 +75,7 @@ class WeiboService extends Service {
       _id: 0,
       monthly: '$_id',
       sum: '$sum',
-    }
+    },
     },
     { $sort: { _id: 1 } }];
     console.log($facet);
@@ -92,7 +89,7 @@ class WeiboService extends Service {
         },
 
       },
-      { $facet }
+      { $facet },
       // { $project: {
       //   _id: 0,
       //   publish_time: IOSDate('$publish_time'),
@@ -119,9 +116,9 @@ class WeiboService extends Service {
   async findById(id) {
     return await this.app.model.User.findById(id);
   }
+
   async create(user) {
     return await this.service.crud.create(this.app.model.User, user);
   }
-
 }
 module.exports = WeiboService;

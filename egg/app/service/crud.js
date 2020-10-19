@@ -1,9 +1,8 @@
-'use strict';
-const Service = require('egg').Service;
+
+const { Service } = require('egg');
 const msg = require('./msg');
 
 class CrudService extends Service {
-
   /**
    * 将字符串转换为 ObjectId
    * @param {String} id id
@@ -31,6 +30,7 @@ class CrudService extends Service {
       return { list };
     }
   }
+
   /**
    * create 成功返回 msg.ok，失败则直接返回 err，其中含有校验错误信息
    * @param {*} model mongoose 模型
@@ -46,6 +46,7 @@ class CrudService extends Service {
       return msg.createErr(err);
     }
   }
+
   /**
    * update 成功返回 msg.ok，失败则直接返回 err，其中含有校验错误信息
    * @param {*} model mongoose 模型
@@ -85,7 +86,6 @@ class CrudService extends Service {
         return msg.ok;
       }
       return msg.notFoundErr();
-
     } catch (err) {
       this.ctx.logger.warn(err);
       return msg.removeErr(err);

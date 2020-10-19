@@ -1,6 +1,6 @@
 module.exports = app => {
-  const mongoose = app.mongoose;
-  const Schema = mongoose.Schema;
+  const { mongoose } = app;
+  const { Schema } = mongoose;
 
   const UserSchema = new Schema({
     // 公众号相关信息

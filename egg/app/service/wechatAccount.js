@@ -1,14 +1,14 @@
-'use strict';
+
 /* global location */
-const Service = require('egg').Service;
+const { Service } = require('egg');
 const allSettled = require('promise.allsettled');
 const axios = require('axios');
 const puppeteer = require('puppeteer');
 const url = require('url');
+
 let page;
 let pageUrl;
 class WechatAccountService extends Service {
-
   // ////////////////////////数据库或其他外部环境相关调用的封装///////////////////////////
 
   // 1. mongoose
@@ -22,7 +22,7 @@ class WechatAccountService extends Service {
   async list(options, query) {
     try {
       const { skip, limit, sort } = query;
-      const params = { sort: sort ? sort : { publish_time: -1 } };
+      const params = { sort: sort || { publish_time: -1 } };
 
       if (skip !== undefined && limit !== undefined) {
         params.skip = skip;
@@ -31,13 +31,11 @@ class WechatAccountService extends Service {
       // https://cn.mongoosedoc.top/docs/populate.html#populate-virtuals
       return await this.app.model.WechatAccount.find(options, null, params)
         .populate({ path: 'author', select: 'nickname -_id -id weibo' });
-
-
     } catch (error) {
       throw error;
     }
-
   }
+
   /**
    * 微博分析
    * @param {Object} options 条件
@@ -45,11 +43,11 @@ class WechatAccountService extends Service {
    */
   async analyze({ user_id } = {}) {
     // user_id = this.service.crud.objectId(user_id);
-    const types = [ 'year', 'month', 'hour', 'dayOfWeek', 'dayOfMonth' ];
+    const types = ['year', 'month', 'hour', 'dayOfWeek', 'dayOfMonth'];
     return (await this.analyzeByTime({ user_id, types }))[0];
   }
-  async analyzeByTime({ user_id, types } = {}) {
 
+  async analyzeByTime({ user_id, types } = {}) {
     const $facet = {
 
     };
@@ -66,14 +64,14 @@ class WechatAccountService extends Service {
         _id: 0,
         [type]: '$_id',
         sum: '$sum',
-      }
+      },
       },
       { $sort: { _id: 1 } }];
     }
     $facet.monthly = [{ $group: {
       _id: {
         // $substr: [{ $add: [ '$created_at', 28800000 ] }, 0, 10 ]
-        $substr: [ '$publish_time', 0, 7 ]
+        $substr: ['$publish_time', 0, 7],
       },
       sum: { $sum: 1 },
     },
@@ -82,7 +80,7 @@ class WechatAccountService extends Service {
       _id: 0,
       monthly: '$_id',
       sum: '$sum',
-    }
+    },
     },
     { $sort: { _id: 1 } }];
     console.log($facet);
@@ -96,7 +94,7 @@ class WechatAccountService extends Service {
         },
 
       },
-      { $facet }
+      { $facet },
       // { $project: {
       //   _id: 0,
       //   publish_time: IOSDate('$publish_time'),
@@ -119,18 +117,20 @@ class WechatAccountService extends Service {
   async findByUsername(username) {
     return await this.app.model.WechatAccount.findOne({ username });
   }
+
   async getKeysFromCookie(pageUrl, page, ctx) {
     const cookiesSet = await page.cookies(pageUrl);
-    const key = (key) => [ ...cookiesSet ].filter(v => v.name === key)[0].value;
+    const key = (key) => [...cookiesSet].filter(v => v.name === key)[0].value;
     const skey = key('wr_skey');
     const vid = key('wr_vid');
     await ctx.helper.asyncRedis('hmset', 'cookie', 'skey', skey, 'vid', vid);
   }
+
   async refreshCookie(ctx) {
     if (process.env.NODE_ENV === 'production') {
       try {
         const browser = await puppeteer.launch({
-          args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
           headless: false,
           userDataDir: './myUserDataDir',
         // executablePath: 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
@@ -160,31 +160,31 @@ class WechatAccountService extends Service {
         // setTimeout(go, ctx.helper.random(1000 * 10, 1000 * 15));
         };
         await go();
-
       } catch (error) {
         console.log(error);
       }
-
     }
   }
+
   async refreshPage() {
     await page.evaluate(() => {
       location.reload(true);
     });
     await this.getKeysFromCookie(pageUrl, page, this.ctx);
   }
+
   async getKeys() {
     try {
       const { 0: skey, 1: vid } = await this.ctx.helper.asyncRedis('hmget', 'cookie', 'skey', 'vid');
       console.log(skey, vid);
       return {
-        skey, vid
+        skey, vid,
       };
     } catch (error) {
       throw error;
     }
-
   }
+
   /**
    * 通过微信读书接口查询公众号信息
    * @param {String} title 公众号名称
@@ -194,8 +194,7 @@ class WechatAccountService extends Service {
   async findBookByTitle(title, count = 100) {
     try {
       const result = await axios.get(`https://i.weread.qq.com/store/search?author=&authorVids=&count=${count}&fromBookId=&keyword=${encodeURI(title)}&maxIdx=0&outer=1&scene=0&type=0&v=2`,
-        { headers: await this.getHeaders() }
-      );
+        { headers: await this.getHeaders() });
       return result.data;
     } catch (error) {
       console.log(error);
@@ -240,6 +239,7 @@ class WechatAccountService extends Service {
   //     "hasMore": 0
   // }
   }
+
   /**
    * 通过微信读书接口查询公众号文章列表
    * @param {String} bookId 公众号bookid
@@ -303,15 +303,14 @@ class WechatAccountService extends Service {
           time, // 文章发布时间
           content, // 文章简介
           mp_name, // 公众号名称
-          avatar // 公众号头像
-        }
+          avatar, // 公众号头像
+        },
       } }, i) => ({
-      bookId, doc_url, pic_url, title, time, content, mp_name, avatar
+      bookId, doc_url, pic_url, title, time, content, mp_name, avatar,
     }));
     try {
       const getBooks = async (offset, count = 20) => (await axios.get(`https://i.weread.qq.com/book/articles?bookId=${bookId}&count=${count}&offset=${offset}`,
-        { headers: await this.getHeaders() }
-      )).data;
+        { headers: await this.getHeaders() })).data;
       let offset = 0;
       let { reviews } = await getBooks(offset);
       list.push(...reviews);
@@ -333,15 +332,17 @@ class WechatAccountService extends Service {
       } else throw error;
     }
   }
+
   async getHeaders() {
     return {
       'User-Agent': 'WeRead/4.5.5 (iPhone; iOS 13.3.1; Scale/3.00)',
       channelid: 'AppStore',
       v: '4.5.5.2',
       'Accept-Encoding': 'gzip,deflate,br',
-      ...(await this.getKeys())
+      ...(await this.getKeys()),
     };
   }
+
   /**
    * 创建 mysql数据库中 account_task 和article_task
    * 绕过关注公众号抓取，原理:一次性拿到所有已经存在的文章，后续抓取更新的文章因为不超过15篇，不用关注即可抓取
@@ -359,19 +360,21 @@ class WechatAccountService extends Service {
         state: 0,
       };
     });
-    const biz = articleTask[0].biz;
+    const { biz } = articleTask[0];
     await this.ctx.service.mysql.wechatAccountTask.create({ biz });
     await this.ctx.service.mysql.wechatArticleTask.creates(articleTask);
   }
+
   async findByTitle(title) {
     return await this.app.model.WechatAccount.findOne({ title });
   }
+
   async findById(id) {
     return await this.app.model.WechatAccount.findById(id);
   }
+
   async create(account) {
     return await this.service.crud.create(this.app.model.WechatAccount, account);
   }
-
 }
 module.exports = WechatAccountService;

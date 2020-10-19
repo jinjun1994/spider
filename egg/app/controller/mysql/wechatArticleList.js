@@ -1,5 +1,5 @@
-'use strict';
-const Controller = require('egg').Controller;
+
+const { Controller } = require('egg');
 /**
   * @controller
   */
@@ -8,6 +8,5 @@ class WechatArticleListsController extends Controller {
     const lists = await this.ctx.wechatModel.WechatArticleList.findAll();
     this.ctx.body = lists;
   }
-
 }
 module.exports = WechatArticleListsController;

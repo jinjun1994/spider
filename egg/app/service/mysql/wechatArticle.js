@@ -1,33 +1,35 @@
-'use strict';
 
-const Service = require('egg').Service;
+
+const { Service } = require('egg');
 const { Op } = require('sequelize');
+
 class WechatArticle extends Service {
   async list(Options) {
     const { ctx } = this;
     return this.ctx.wechatModel.WechatArticle.findAndCountAll({
       where: { ...Options,
         id: {
-          [Op.ne]: null
-        }
+          [Op.ne]: null,
+        },
       },
-      attributes: { exclude: [ 'content_html' ] }, // 排除该字段
+      attributes: { exclude: ['content_html'] }, // 排除该字段
 
       ...(ctx.query.full === 'true' ? {} : ctx.helper.mysqlPageQuery(ctx.query)),
-      order: [[ 'publish_time', 'desc' ]],
+      order: [['publish_time', 'desc']],
     //   order: [[ 'created_at', 'desc' ], [ 'id', 'desc' ]],
     });
   }
 
   async find(id) {
     const article = await this.ctx.wechatModel.WechatArticle.findByPk(id, {
-      attributes: { exclude: [ 'content_html' ] },
+      attributes: { exclude: ['content_html'] },
     });
     if (!article) {
       this.ctx.throw(404, 'article not found');
     }
     return article;
   }
+
   async findOneByOptions(Options) {
     const article = await this.ctx.wechatModel.WechatArticle.findOne({ where: Options });
     // if (!articles) {
@@ -39,6 +41,7 @@ class WechatArticle extends Service {
   async create(article) {
     return await this.ctx.wechatModel.WechatArticle.create(article);
   }
+
   async creates(list) {
     return await this.ctx.wechatModel.WechatArticle.bulkCreate(list, { validate: true });
   }

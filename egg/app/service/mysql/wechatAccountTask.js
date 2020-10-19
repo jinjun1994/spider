@@ -1,6 +1,6 @@
-'use strict';
 
-const Service = require('egg').Service;
+
+const { Service } = require('egg');
 
 class WechatAccountTask extends Service {
   async list(Options) {
@@ -23,6 +23,7 @@ class WechatAccountTask extends Service {
   async create(task) {
     return await this.ctx.wechatModel.WechatAccountTask.create(task);
   }
+
   async creates(list) {
     return await this.ctx.wechatModel.WechatAccountTask.bulkCreate(list, { validate: true });
   }

@@ -1,16 +1,15 @@
-'use strict';
-const Controller = require('egg').Controller;
+
+const { Controller } = require('egg');
 const { Op } = require('sequelize');
 /**
   * @controller
   */
 class WechatAccountsController extends Controller {
   async index(ctx) {
-
     const { account } = ctx.query;
     const options = {
       ...(account ? { account: {
-        [Op.like]: `%${account}%`
+        [Op.like]: `%${account}%`,
       } } : {}),
 
     };
@@ -18,9 +17,8 @@ class WechatAccountsController extends Controller {
     const accounts = await ctx.service.mysql.wechatAccount.list(options);
     console.log(accounts);
 
-    for (const [ k, v ] of Object.entries(accounts.rows)) {
+    for (const [k, v] of Object.entries(accounts.rows)) {
       accounts.rows[k].dataValues.accountTask = (await ctx.service.mysql.wechatAccountTask.list({ biz: v.biz })).rows[0];
-
     }
     ctx.body = accounts;
   }

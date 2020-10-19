@@ -1,4 +1,4 @@
-'use strict';
+
 const redis = require('redis');
 const { promisify } = require('util');
 const config = require('../../../config');
@@ -8,7 +8,7 @@ const { port = 6379, host = '127.0.0.1', password } = config.redis;
 const redisClient = redis.createClient({
   port,
   host,
-  ...(password ? { password } : {})
+  ...(password ? { password } : {}),
 });
 
 
@@ -19,9 +19,8 @@ module.exports = {
    * @return {Object} {skip, limit, sort}
    */
   pageQuery(options) {
-
-    let sort = options.sort;
-    const order = options.order;
+    let { sort } = options;
+    const { order } = options;
     const { offset, limit } = this.query(options);
     if (sort) {
       if (order === '-1') {
@@ -32,18 +31,18 @@ module.exports = {
       return {
         sort,
         skip: offset,
-        limit
+        limit,
       };
     }
 
     return {
       skip: offset,
-      limit
+      limit,
     };
   },
   query(options) {
-    let page = options.page;
-    let size = options.size;
+    let { page } = options;
+    let { size } = options;
     if (!page) {
       page = 0;
     } else {
@@ -79,5 +78,5 @@ module.exports = {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
-  }
+  },
 };

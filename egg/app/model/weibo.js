@@ -1,6 +1,6 @@
 module.exports = app => {
-  const mongoose = app.mongoose;
-  const Schema = mongoose.Schema;
+  const { mongoose } = app;
+  const { Schema } = mongoose;
 
   const WeiboSchema = new Schema({
 

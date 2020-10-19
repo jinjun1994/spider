@@ -1,20 +1,20 @@
 const ABU = require('alioss-batch-upload');
-const configs = require('../../../config');
 const path = require('path');
 const chalk = require('chalk');
 const _ = require('lodash');
 const AliOSS = require('ali-oss');
-const Buffer = require('buffer').Buffer;
+const { Buffer } = require('buffer');
 const zlib = require('zlib');
+const configs = require('../../../config');
 
-const red = chalk.red;
-const green = chalk.bold.green;
+const { red } = chalk;
+const { green } = chalk.bold;
 
 module.exports = {
   schedule: {
     interval: '12h', // 1 分钟间隔
     type: 'worker', // 指定所有的 worker 都需要执行
-    immediate: true
+    immediate: true,
   },
   async task(ctx) {
     if (process.env.NODE_ENV === 'production') {
@@ -61,7 +61,6 @@ module.exports = {
       } else {
         this.finalPrefix = `${this.config.ossBaseDir}/${this.config.project}`;
       }
-
     }
     this.debug('使用的 OSS 目录:', this.finalPrefix);
     return this.finalPrefix;
@@ -79,7 +78,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
           this.client.list({
             prefix: uploadName,
-            'max-keys': 50
+            'max-keys': 50,
           }).then(res => {
             const arr = (res.objects || []).filter(item => item.name === uploadName);
             if (arr && arr.length > 0) {
@@ -107,7 +106,7 @@ module.exports = {
         const self = this;
         function _uploadAction() {
           file.$retryTime++;
-          log(`开始上传 ${idx}/${fileCount}: ${file.$retryTime > 1 ? '第' + (file.$retryTime - 1) + '次重试' : ''}`, uploadName);
+          log(`开始上传 ${idx}/${fileCount}: ${file.$retryTime > 1 ? `第${ file.$retryTime - 1 }次重试` : ''}`, uploadName);
           self.client.put(uploadName, contentBuffer, opt)
             .then(() => {
               log(`上传成功 ${idx}/${fileCount}: ${uploadName}`);
@@ -137,7 +136,7 @@ module.exports = {
         return this.config.options;
       } else {
         return {
-          headers: { 'Content-Encoding': 'gzip' }
+          headers: { 'Content-Encoding': 'gzip' },
         };
       }
     } else {
@@ -157,7 +156,7 @@ module.exports = {
     return _.map(matched, (value, name) => ({
       name,
       path: value.existsAt,
-      content: value.source()
+      content: value.source(),
     }));
   },
 
@@ -173,7 +172,7 @@ module.exports = {
 
   debug(...rest) {
     this.config.enableLog && log(...rest);
-  }
+  },
 };
 function extraEnvBoolean(val) {
   if (val && val === 'true') {

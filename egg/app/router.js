@@ -1,4 +1,4 @@
-'use strict';
+
 
 /**
  * @param {Egg.Application} app - egg application
@@ -27,5 +27,4 @@ module.exports = app => {
   router.get('/mysql/wechat/dynamic', controller.mysql.wechatArticleDynamic.index);
   router.get('/mysql/wechat/article/list', controller.mysql.wechatArticleList.index);
   router.get('/mysql/wechat/article/task', controller.mysql.wechatArticleTask.index);
-
 };

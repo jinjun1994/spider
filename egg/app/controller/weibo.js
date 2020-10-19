@@ -1,11 +1,9 @@
-'use strict';
-const Controller = require('egg').Controller;
+
+const { Controller } = require('egg');
 /**
   * @controller
   */
 class WeiboController extends Controller {
-
-
   async index(ctx) {
     try {
       const { content, user_id, original, origtrueinal_pictures, retweet_pictures, video_url } = ctx.query;
@@ -27,6 +25,7 @@ class WeiboController extends Controller {
       throw err;
     }
   }
+
   async analyze(ctx) {
     try {
       const user_id = ctx.params.id;
@@ -44,7 +43,5 @@ class WeiboController extends Controller {
       throw err;
     }
   }
-
-
 }
 module.exports = WeiboController;

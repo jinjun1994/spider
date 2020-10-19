@@ -1,5 +1,5 @@
-'use strict';
-const Controller = require('egg').Controller;
+
+const { Controller } = require('egg');
 /**
   * @controller
   */
@@ -8,6 +8,5 @@ class WechatAccountTasksController extends Controller {
     const tasks = await this.ctx.wechatModel.WechatAccountTask.findAll();
     this.ctx.body = tasks;
   }
-
 }
 module.exports = WechatAccountTasksController;

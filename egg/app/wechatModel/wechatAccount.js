@@ -13,13 +13,13 @@ module.exports = app => {
     summary: STRING(500),
     qr_code: STRING(255),
     verify: STRING(255),
-    spider_time: DATE
+    spider_time: DATE,
   }, {
     tableName,
     createdAt: false,
     updatedAt: false,
   });
-  WechatAccount.associate = function() {
+  WechatAccount.associate = function () {
     app.wechatModel.WechatAccount.hasOne(app.wechatModel.WechatAccountTask, { foreignKey: 'biz', as: 'accountTask' });
   };
   return WechatAccount;
