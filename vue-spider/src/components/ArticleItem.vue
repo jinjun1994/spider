@@ -66,6 +66,13 @@
         >
           点击阅读
         </a>
+        <a
+          v-if="$route.name!=='User'"
+          style="margin: 0 0.5em"
+          target="_blank"
+          :href="`${pdfUrl}`"
+          :download="`${item.title}.pdf`"
+        >  pdf下载</a>
       </div>
     </el-card>
   </li>
@@ -88,7 +95,7 @@
 // },
 import { timeAgo } from '../util/filters';
 const parseUrl = require('parse-url');
-
+const filenamify = require('filenamify');
 export default {
   name: 'NewsItem',
   props: {
@@ -107,6 +114,9 @@ export default {
     url() {
       const { protocol, resource, pathname, query: { __biz, mid, idx, sn } } = parseUrl(this.item.url, false);
       return `${protocol}://${resource}${pathname}?__biz=${__biz}&mid=${mid}&idx=${idx}&sn=${sn}`;
+    },
+    pdfUrl() {
+      return `${this.ossurl}/articles/${this.item.biz}/${filenamify(this.item.title)}.pdf`;
     }
   },
   // http://ssr.vuejs.org/en/caching.html#component-level-caching
