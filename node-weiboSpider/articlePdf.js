@@ -73,13 +73,14 @@ const merge = require("easy-pdf-merge");
   await cluster.idle();
   await cluster.close();
   for (const [k, v] of Object.entries(mergeFiles)) {
-    if (fs.existsSync(`${k}.pdf`) ) {
-      fs.unlinkSync(`${k}.pdf`)
+    if(v.new.length ||!fs.existsSync(`${k}.pdf`) ) {
+      if (fs.existsSync(`${k}.pdf`) ) {
+        fs.unlinkSync(`${k}.pdf`)
+      }
+      if (v.all.length > 0) {
+        await mergePdfs(v.all, k);
+      }
     }
-    if (v.all.length > 0) {
-      await mergePdfs(v.all, k);
-    }
-  
     
   }
 })();
@@ -134,15 +135,15 @@ async function mergePdfs(pdfs, name) {
     if (pdfs.length > 50) {
       await PDFMerge(
         [
-          ...pdfs.slice(0, 50),
           ...(fs.existsSync(`${name}.pdf`) ? [`${name}.pdf`] : []),
+          ...pdfs.slice(0, 50),
         ],
         { output: `${name}.pdf` }
       );
       await mergePdfs(pdfs.slice(50), name);
     } else {
       await PDFMerge(
-        [...pdfs, ...(fs.existsSync(`${name}.pdf`) ? [`${name}.pdf`] : [])],
+        [...(fs.existsSync(`${name}.pdf`) ? [`${name}.pdf`] : []),...pdfs, ],
         { output: `${name}.pdf` }
       );
     }
