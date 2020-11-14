@@ -66,7 +66,7 @@ const merge = require("easy-pdf-merge");
         account.account ? account.account : account.biz
       }_微信文章合集`
     ] = {
-      all: articleFiles,
+      all: articleFiles.reverse(),
       new: newArticleFiles,
     };
   }
