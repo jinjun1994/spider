@@ -78,7 +78,7 @@ class WechatAccountsController extends Controller {
           ctx.service.wechatAccount.makeTask({ bookId });
 
           ctx.body = {
-            message: `${title }收录成功，正在抓取文章`,
+            message: `${title}收录成功，正在抓取文章`,
           };
         } else {
           ctx.body = {
@@ -87,6 +87,35 @@ class WechatAccountsController extends Controller {
           };
         }
       }
+    } catch (err) {
+      ctx.logger.warn(err);
+      throw err;
+    }
+  }
+  async getArticleListByTitle(ctx) {
+    try {
+      const { title } = ctx.request.body;
+      // 此处title 即是公众号昵称
+      console.log(title);
+
+      let { books } = await ctx.service.wechatAccount.findBookByTitle(title);
+      books = books.filter(v => v.bookInfo && v.bookInfo.title === title && v.bookInfo.author === '公众号');
+      console.log(books[0]);
+      if (books.length > 0) {
+        const { bookInfo: { bookId, title, cover, intro } } = books[0];
+        const list = await ctx.service.wechatAccount.getArticleList({ bookId });
+        ctx.body = {
+          message: `${title}收录成功，正在抓取文章`,
+          list,
+          total: list.length
+        };
+      } else {
+        ctx.body = {
+          message: `${title} 未找到，请确认输入正确`,
+
+        };
+      }
+
     } catch (err) {
       ctx.logger.warn(err);
       throw err;
